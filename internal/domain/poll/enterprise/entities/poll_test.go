@@ -11,7 +11,7 @@ import (
 
 func TestNewPoll(t *testing.T) {
 	t.Run("with required params", func(t *testing.T) {
-		options := []entities.PollOption{
+		options := []*entities.PollOption{
 			{Title: "Option 1"},
 			{Title: "Option 2"},
 		}
@@ -29,7 +29,7 @@ func TestNewPoll(t *testing.T) {
 		id := core.NewUniqueEntityId()
 		createdAt := time.Now().Add(-1 * time.Hour)
 
-		options := []entities.PollOption{
+		options := []*entities.PollOption{
 			{Title: "Option 1"},
 			{Title: "Option 2"},
 		}
@@ -53,7 +53,7 @@ func TestPoll_AddOption(t *testing.T) {
 	t.Run("add first option", func(t *testing.T) {
 		poll := entities.Poll{}
 
-		option := entities.PollOption{Title: "Option 1"}
+		option, _ := entities.NewPollOption("Option 1")
 		poll.AddOption(option)
 
 		assert.Equal(t, 1, len(poll.Options))
@@ -61,12 +61,12 @@ func TestPoll_AddOption(t *testing.T) {
 	})
 
 	t.Run("add duplicate option", func(t *testing.T) {
-		existingOption := entities.PollOption{Title: "Option 1"}
+		existingOption := &entities.PollOption{Title: "Option 1"}
 		poll := entities.Poll{
-			Options: []entities.PollOption{existingOption},
+			Options: []*entities.PollOption{existingOption},
 		}
 
-		duplicateOption := entities.PollOption{Title: "Option 1"}
+		duplicateOption := &entities.PollOption{Title: "Option 1"}
 		poll.AddOption(duplicateOption)
 
 		assert.Equal(t, 1, len(poll.Options))
@@ -74,12 +74,12 @@ func TestPoll_AddOption(t *testing.T) {
 	})
 
 	t.Run("add unique option", func(t *testing.T) {
-		existingOption := entities.PollOption{Title: "Option 1"}
+		existingOption := &entities.PollOption{Title: "Option 1"}
 		poll := entities.Poll{
-			Options: []entities.PollOption{existingOption},
+			Options: []*entities.PollOption{existingOption},
 		}
 
-		newOption := entities.PollOption{Title: "Option 2"}
+		newOption := &entities.PollOption{Title: "Option 2"}
 		poll.AddOption(newOption)
 
 		assert.Equal(t, 2, len(poll.Options))
