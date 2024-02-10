@@ -43,11 +43,16 @@ func TestCreatePollUseCase(t *testing.T) {
 
 	t.Run("returns error if poll has no at least 2 options", func(t *testing.T) {
 		uc := makeCreatePollUseCase()
+		owner := factories.MakeVoter()
+		uc.votersRepository.Voters = append(uc.votersRepository.Voters, owner)
 
 		err := uc.sut.Execute(usecases.CreatePollRequest{
 			Title:   "test",
 			Options: []string{},
+			OwnerId: owner.Id.String(),
 		})
+
+		println(err.Error())
 
 		assert.ErrorIs(t, err, errors.ErrInvalidPoll)
 
@@ -56,6 +61,7 @@ func TestCreatePollUseCase(t *testing.T) {
 			Options: []string{
 				"test",
 			},
+			OwnerId: owner.Id.String(),
 		})
 
 		assert.ErrorIs(t, err, errors.ErrInvalidPoll)

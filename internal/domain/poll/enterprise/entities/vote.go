@@ -42,6 +42,10 @@ type OptionalVoteParams struct {
 	VoterId   *core.UniqueEntityId
 }
 
+func (v *Vote) IsTheSameVoteOption(optionId string) bool {
+	return v.OptionId.String() == optionId
+}
+
 func NewVote(pollId core.UniqueEntityId, optionId core.UniqueEntityId, voterId core.UniqueEntityId, optional ...OptionalVoteParams) (*Vote, error) {
 	var id core.UniqueEntityId
 	var optionIdVo core.UniqueEntityId

@@ -1,6 +1,10 @@
 package repositories_test
 
-import "github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+import (
+	"errors"
+
+	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+)
 
 type InMemoryPollsRepository struct {
 	Polls []*entities.Poll
@@ -17,7 +21,8 @@ func (r *InMemoryPollsRepository) FindById(id string) (*entities.Poll, error) {
 			return poll, nil
 		}
 	}
-	return nil, nil
+
+	return nil, errors.New("poll not found")
 }
 
 func (r *InMemoryPollsRepository) FindMany() ([]*entities.Poll, error) {

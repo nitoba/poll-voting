@@ -1,6 +1,10 @@
 package repositories_test
 
-import "github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+import (
+	"errors"
+
+	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+)
 
 type InMemoryVotesRepository struct {
 	Votes []*entities.Vote
@@ -9,4 +13,23 @@ type InMemoryVotesRepository struct {
 func (repo *InMemoryVotesRepository) Create(vote *entities.Vote) error {
 	repo.Votes = append(repo.Votes, vote)
 	return nil
+}
+
+func (repo *InMemoryVotesRepository) FindByOptionId(id string) (*entities.Vote, error) {
+	for _, p := range repo.Votes {
+		if p.OptionId.String() == id {
+			return p, nil
+		}
+	}
+	return nil, errors.New("vote not found")
+}
+
+func (repo *InMemoryVotesRepository) Delete(vote *entities.Vote) error {
+	for i, v := range repo.Votes {
+		if v.OptionId.String() == vote.OptionId.String() {
+			repo.Votes = append(repo.Votes[:i], repo.Votes[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("vote not found")
 }

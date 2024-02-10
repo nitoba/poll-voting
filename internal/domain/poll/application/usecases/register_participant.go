@@ -22,7 +22,7 @@ type RegisterVoterUseCase struct {
 func (u *RegisterVoterUseCase) Execute(req *RegisterVoterRequest) error {
 	existsVoter, err := u.voterRepository.FindByEmail(req.Email)
 
-	if err != nil || existsVoter != nil {
+	if existsVoter != nil && err == nil {
 		return errors.ErrVoterAlreadyExists
 	}
 

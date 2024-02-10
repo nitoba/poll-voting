@@ -1,6 +1,10 @@
 package repositories_test
 
-import "github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+import (
+	"errors"
+
+	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+)
 
 type InMemoryVotersRepository struct {
 	Voters []*entities.Voter
@@ -17,7 +21,7 @@ func (repo *InMemoryVotersRepository) FindById(id string) (*entities.Voter, erro
 			return p, nil
 		}
 	}
-	return nil, nil
+	return nil, errors.New("voter not found")
 }
 
 func (repo *InMemoryVotersRepository) FindByEmail(email string) (*entities.Voter, error) {
@@ -26,5 +30,5 @@ func (repo *InMemoryVotersRepository) FindByEmail(email string) (*entities.Voter
 			return p, nil
 		}
 	}
-	return nil, nil
+	return nil, errors.New("voter not found")
 }

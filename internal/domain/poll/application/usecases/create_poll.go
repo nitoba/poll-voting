@@ -19,8 +19,7 @@ type CreatePollRequest struct {
 
 func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
 	p, err := uc.voterRepo.FindById(req.OwnerId)
-
-	if err != nil || p == nil {
+	if p == nil && err != nil {
 		return errors.ErrInvalidOwner
 	}
 
