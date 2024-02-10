@@ -55,15 +55,12 @@ func (u *VoteOnPollUseCase) Execute(req *VoteOnPollUseCaseRequest) error {
 			return err
 		}
 
-		vote, err := entities.NewVote(poll.Id, core.NewUniqueEntityId(req.PollOptionId), voter.Id)
+		previousVote.ChangeVoteOption(req.PollOptionId)
 
-		if err != nil {
+		if err := u.voteRepo.Create(previousVote); err != nil {
 			return err
 		}
-
-		if err := u.voteRepo.Create(vote); err != nil {
-			return err
-		}
+		return nil
 	} else {
 		// if previous vote does not exist, create a new one
 		vote, err := entities.NewVote(poll.Id, core.NewUniqueEntityId(req.PollOptionId), voter.Id)

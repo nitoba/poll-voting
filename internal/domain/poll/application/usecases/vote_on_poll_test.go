@@ -138,4 +138,39 @@ func TestVoteOnPollAdditionalCases(t *testing.T) {
 		assert.Error(t, err, "voter has already voted on this poll option")
 	})
 
+	t.Run("it should be change the vote", func(t *testing.T) {
+		// Arrange
+		res := makeVoteOnPollUseCase()
+		poll := factories.MakePool()
+		voter := factories.MakeVoter()
+		res.pollRepo.Create(poll)
+		res.voterRepo.Create(voter)
+
+		vote := factories.MakeVote(factories.OptionalVoteParams{
+			PollId:   &poll.Id,
+			VoterId:  &voter.Id,
+			OptionId: &poll.Options[0].Id,
+		})
+
+		res.voteRepo.Create(vote)
+
+		req := usecases.VoteOnPollUseCaseRequest{
+			PollOptionId: poll.Options[1].Id.String(),
+			PollId:       poll.Id.String(),
+			VoterId:      voter.Id.String(),
+		}
+
+		// Act
+
+		err := res.sut.Execute(&req)
+
+		// Assert
+
+		assert.Nil(t, err)
+		assert.NotEmpty(t, res.voteRepo.Votes[0].Id.String())
+		assert.Equal(t, res.voteRepo.Votes[0].PollId.String(), poll.Id.String())
+		assert.Equal(t, res.voteRepo.Votes[0].VoterId.String(), voter.Id.String())
+		assert.Equal(t, res.voteRepo.Votes[0].OptionId.String(), poll.Options[1].Id.String())
+	})
+
 }

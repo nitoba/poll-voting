@@ -17,11 +17,11 @@ type OptionalVoteParams struct {
 
 func MakeVote(props ...OptionalVoteParams) *entities.Vote {
 
-	var id core.UniqueEntityId
-	var pollIdVo core.UniqueEntityId
-	var optionIdVo core.UniqueEntityId
-	var voterIdVo core.UniqueEntityId
-	var createdAt time.Time
+	var id core.UniqueEntityId = core.NewUniqueEntityId()
+	var pollIdVo core.UniqueEntityId = core.NewUniqueEntityId()
+	var optionIdVo core.UniqueEntityId = core.NewUniqueEntityId()
+	var voterIdVo core.UniqueEntityId = core.NewUniqueEntityId()
+	var createdAt time.Time = time.Now()
 
 	if len(props) > 0 && props[0].Id != nil {
 		id = core.NewUniqueEntityId(props[0].Id.String())
