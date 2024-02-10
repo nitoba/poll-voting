@@ -9,9 +9,9 @@ import (
 )
 
 type AuthenticateUseCase struct {
-	participantRepository repositories.ParticipantsRepository
-	hasher                cryptography.HashComparer
-	encrypter             cryptography.Encrypter
+	voterRepository repositories.VotersRepository
+	hasher          cryptography.HashComparer
+	encrypter       cryptography.Encrypter
 }
 
 type AuthenticateRequest struct {
@@ -24,19 +24,19 @@ type AuthenticateResponse struct {
 }
 
 func (u *AuthenticateUseCase) Execute(req AuthenticateRequest) (*AuthenticateResponse, error) {
-	participant, err := u.participantRepository.FindByEmail(req.Email)
+	voter, err := u.voterRepository.FindByEmail(req.Email)
 
-	if err != nil || participant == nil {
+	if err != nil || voter == nil {
 		return nil, errors.ErrWrongCredentials
 	}
 
-	if !u.hasher.Compare(req.Password, participant.Password) {
-		fmt.Println(participant.Email.Value())
+	if !u.hasher.Compare(req.Password, voter.Password) {
+		fmt.Println(voter.Email.Value())
 		return nil, errors.ErrWrongCredentials
 	}
 
 	token := u.encrypter.Encrypt(map[string]interface{}{
-		"sub": participant.Id.String(),
+		"sub": voter.Id.String(),
 	})
 
 	return &AuthenticateResponse{
@@ -44,10 +44,10 @@ func (u *AuthenticateUseCase) Execute(req AuthenticateRequest) (*AuthenticateRes
 	}, nil
 }
 
-func NewAuthenticateUseCase(participantRepository repositories.ParticipantsRepository, hasher cryptography.HashComparer, encrypter cryptography.Encrypter) *AuthenticateUseCase {
+func NewAuthenticateUseCase(voterRepository repositories.VotersRepository, hasher cryptography.HashComparer, encrypter cryptography.Encrypter) *AuthenticateUseCase {
 	return &AuthenticateUseCase{
-		participantRepository: participantRepository,
-		hasher:                hasher,
-		encrypter:             encrypter,
+		voterRepository: voterRepository,
+		hasher:          hasher,
+		encrypter:       encrypter,
 	}
 }

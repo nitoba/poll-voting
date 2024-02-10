@@ -11,20 +11,20 @@ import (
 )
 
 type TestCreatePollUseCaseConfig struct {
-	sut                    *usecases.CreatePollUseCase
-	repo                   *repositories_test.InMemoryPollsRepository
-	participantsRepository *repositories_test.InMemoryParticipantsRepository
+	sut              *usecases.CreatePollUseCase
+	repo             *repositories_test.InMemoryPollsRepository
+	votersRepository *repositories_test.InMemoryVotersRepository
 }
 
 func makeCreatePollUseCase() TestCreatePollUseCaseConfig {
-	participantsRepository := &repositories_test.InMemoryParticipantsRepository{}
+	votersRepository := &repositories_test.InMemoryVotersRepository{}
 	repo := &repositories_test.InMemoryPollsRepository{}
-	sut := usecases.NewCreatePollUseCase(repo, participantsRepository)
+	sut := usecases.NewCreatePollUseCase(repo, votersRepository)
 
 	return TestCreatePollUseCaseConfig{
-		sut:                    sut,
-		repo:                   repo,
-		participantsRepository: participantsRepository,
+		sut:              sut,
+		repo:             repo,
+		votersRepository: votersRepository,
 	}
 }
 
@@ -63,9 +63,9 @@ func TestCreatePollUseCase(t *testing.T) {
 
 	t.Run("it should be able to create a new poll", func(t *testing.T) {
 		uc := makeCreatePollUseCase()
-		owner := factories.MakeParticipant()
+		owner := factories.MakeVoter()
 
-		uc.participantsRepository.Participants = append(uc.participantsRepository.Participants, owner)
+		uc.votersRepository.Voters = append(uc.votersRepository.Voters, owner)
 
 		err := uc.sut.Execute(usecases.CreatePollRequest{
 			Title: "test",

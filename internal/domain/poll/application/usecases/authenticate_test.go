@@ -12,23 +12,23 @@ import (
 )
 
 type TestAuthenticateUseCaseConfig struct {
-	sut                    *usecases.AuthenticateUseCase
-	participantsRepository *repositories_test.InMemoryParticipantsRepository
-	HashComparer           *cryptography_test.FakeHasher
-	encrypter              *cryptography_test.FakeEncrypter
+	sut              *usecases.AuthenticateUseCase
+	votersRepository *repositories_test.InMemoryVotersRepository
+	HashComparer     *cryptography_test.FakeHasher
+	encrypter        *cryptography_test.FakeEncrypter
 }
 
 func makeAuthenticateUseCase() TestAuthenticateUseCaseConfig {
-	participantsRepository := &repositories_test.InMemoryParticipantsRepository{}
+	votersRepository := &repositories_test.InMemoryVotersRepository{}
 	HashComparer := &cryptography_test.FakeHasher{}
 	encrypter := &cryptography_test.FakeEncrypter{}
-	sut := usecases.NewAuthenticateUseCase(participantsRepository, HashComparer, encrypter)
+	sut := usecases.NewAuthenticateUseCase(votersRepository, HashComparer, encrypter)
 
 	return TestAuthenticateUseCaseConfig{
-		sut:                    sut,
-		participantsRepository: participantsRepository,
-		HashComparer:           HashComparer,
-		encrypter:              encrypter,
+		sut:              sut,
+		votersRepository: votersRepository,
+		HashComparer:     HashComparer,
+		encrypter:        encrypter,
 	}
 }
 
@@ -38,15 +38,15 @@ func TestAuthenticateUseCase(t *testing.T) {
 
 		password, _ := uc.HashComparer.Hash("secret")
 
-		participant := factories.MakeParticipant(map[string]interface{}{
+		voter := factories.MakeVoter(map[string]interface{}{
 			"email":    "john.doe@gmail.com",
 			"password": password,
 		})
 
-		uc.participantsRepository.Participants = append(uc.participantsRepository.Participants, participant)
+		uc.votersRepository.Voters = append(uc.votersRepository.Voters, voter)
 
 		req := usecases.AuthenticateRequest{
-			Email:    participant.Email.Value(),
+			Email:    voter.Email.Value(),
 			Password: "secret",
 		}
 
@@ -68,12 +68,12 @@ func TestAuthenticateUseCase(t *testing.T) {
 
 		password, _ := uc.HashComparer.Hash("secret")
 
-		participant := factories.MakeParticipant(map[string]interface{}{
+		voter := factories.MakeVoter(map[string]interface{}{
 			"email":    "john.doe@gmail.com",
 			"password": password,
 		})
 
-		uc.participantsRepository.Participants = append(uc.participantsRepository.Participants, participant)
+		uc.votersRepository.Voters = append(uc.votersRepository.Voters, voter)
 
 		_, err = uc.sut.Execute(usecases.AuthenticateRequest{
 			Email:    "invalid@email.com",

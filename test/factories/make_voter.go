@@ -7,7 +7,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
 )
 
-func MakeParticipant(props ...map[string]interface{}) *entities.Participant {
+func MakeVoter(props ...map[string]interface{}) *entities.Voter {
 	fake := faker.New()
 	id := core.NewUniqueEntityId()
 	name := fake.Lorem().Word()
@@ -32,7 +32,7 @@ func MakeParticipant(props ...map[string]interface{}) *entities.Participant {
 
 	emailVo, _ := value_objects.NewEmail(email)
 
-	return &entities.Participant{
+	return &entities.Voter{
 		Id:       id,
 		Name:     name,
 		Email:    emailVo,

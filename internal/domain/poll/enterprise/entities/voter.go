@@ -9,14 +9,14 @@ import (
 
 var ErrMissingArgument = errors.New("missing argument")
 
-type Participant struct {
+type Voter struct {
 	Id       core.UniqueEntityId
 	Name     string
 	Email    *value_objects.Email
 	Password string
 }
 
-func (p *Participant) Equals(other *Participant) bool {
+func (p *Voter) Equals(other *Voter) bool {
 	if p == nil || other == nil {
 		return false
 	}
@@ -26,7 +26,7 @@ func (p *Participant) Equals(other *Participant) bool {
 	return p.Id.String() == other.Id.String()
 }
 
-func (*Participant) validate(name, password string) error {
+func (*Voter) validate(name, password string) error {
 	if name == "" {
 		return ErrMissingArgument
 	}
@@ -36,7 +36,7 @@ func (*Participant) validate(name, password string) error {
 	return nil
 }
 
-func NewParticipant(name string, email *value_objects.Email, password string, id ...core.UniqueEntityId) (*Participant, error) {
+func NewVoter(name string, email *value_objects.Email, password string, id ...core.UniqueEntityId) (*Voter, error) {
 	var ID core.UniqueEntityId
 	if len(id) > 0 {
 		ID = id[0]
@@ -44,7 +44,7 @@ func NewParticipant(name string, email *value_objects.Email, password string, id
 		ID = core.NewUniqueEntityId()
 	}
 
-	p := &Participant{
+	p := &Voter{
 		Id:       ID,
 		Name:     name,
 		Email:    email,

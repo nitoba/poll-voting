@@ -7,8 +7,8 @@ import (
 )
 
 type CreatePollUseCase struct {
-	repo            repositories.PollsRepository
-	participantRepo repositories.ParticipantsRepository
+	repo      repositories.PollsRepository
+	voterRepo repositories.VotersRepository
 }
 
 type CreatePollRequest struct {
@@ -18,7 +18,7 @@ type CreatePollRequest struct {
 }
 
 func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
-	p, err := uc.participantRepo.FindById(req.OwnerId)
+	p, err := uc.voterRepo.FindById(req.OwnerId)
 
 	if err != nil || p == nil {
 		return errors.ErrInvalidOwner
@@ -51,9 +51,9 @@ func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
 	return nil
 }
 
-func NewCreatePollUseCase(repo repositories.PollsRepository, participantRepo repositories.ParticipantsRepository) *CreatePollUseCase {
+func NewCreatePollUseCase(repo repositories.PollsRepository, voterRepo repositories.VotersRepository) *CreatePollUseCase {
 	return &CreatePollUseCase{
-		repo:            repo,
-		participantRepo: participantRepo,
+		repo:      repo,
+		voterRepo: voterRepo,
 	}
 }

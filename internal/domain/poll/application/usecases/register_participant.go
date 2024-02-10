@@ -8,22 +8,22 @@ import (
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
 )
 
-type RegisterParticipantRequest struct {
+type RegisterVoterRequest struct {
 	Name     string
 	Email    string
 	Password string
 }
 
-type RegisterParticipantUseCase struct {
-	participantRepository repositories.ParticipantsRepository
-	hasher                cryptography.HashGenerator
+type RegisterVoterUseCase struct {
+	voterRepository repositories.VotersRepository
+	hasher          cryptography.HashGenerator
 }
 
-func (u *RegisterParticipantUseCase) Execute(req *RegisterParticipantRequest) error {
-	existsParticipant, err := u.participantRepository.FindByEmail(req.Email)
+func (u *RegisterVoterUseCase) Execute(req *RegisterVoterRequest) error {
+	existsVoter, err := u.voterRepository.FindByEmail(req.Email)
 
-	if err != nil || existsParticipant != nil {
-		return errors.ErrParticipantAlreadyExists
+	if err != nil || existsVoter != nil {
+		return errors.ErrVoterAlreadyExists
 	}
 
 	email, err := value_objects.NewEmail(req.Email)
@@ -38,22 +38,22 @@ func (u *RegisterParticipantUseCase) Execute(req *RegisterParticipantRequest) er
 		return err
 	}
 
-	participant, err := entities.NewParticipant(req.Name, email, passwordHashed)
+	voter, err := entities.NewVoter(req.Name, email, passwordHashed)
 
 	if err != nil {
 		return err
 	}
 
-	if err = u.participantRepository.Create(participant); err != nil {
+	if err = u.voterRepository.Create(voter); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func NewRegisterParticipantUseCase(participantRepository repositories.ParticipantsRepository, hasher cryptography.HashGenerator) *RegisterParticipantUseCase {
-	return &RegisterParticipantUseCase{
-		participantRepository: participantRepository,
-		hasher:                hasher,
+func NewRegisterVoterUseCase(voterRepository repositories.VotersRepository, hasher cryptography.HashGenerator) *RegisterVoterUseCase {
+	return &RegisterVoterUseCase{
+		voterRepository: voterRepository,
+		hasher:          hasher,
 	}
 }

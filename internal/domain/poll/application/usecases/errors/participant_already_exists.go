@@ -2,4 +2,4 @@ package errors
 
 import "errors"
 
-var ErrParticipantAlreadyExists = errors.New("participant already exists")
+var ErrVoterAlreadyExists = errors.New("voter already exists")
