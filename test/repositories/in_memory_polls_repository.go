@@ -19,3 +19,7 @@ func (r *InMemoryPollsRepository) FindById(id string) (*entities.Poll, error) {
 	}
 	return nil, nil
 }
+
+func (r *InMemoryPollsRepository) FindMany() ([]*entities.Poll, error) {
+	return r.Polls, nil
+}
