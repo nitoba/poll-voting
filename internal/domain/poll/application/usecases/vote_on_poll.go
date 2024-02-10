@@ -41,11 +41,11 @@ func (u *VoteOnPollUseCase) Execute(req *VoteOnPollUseCaseRequest) error {
 		return err
 	}
 
-	// check if voter has voted on this poll option already
-	previousVote, err := u.voteRepo.FindByOptionId(req.PollOptionId)
+	// check if voter has voted on this poll
+	previousVote, err := u.voteRepo.FindByPollIdAndVoterId(req.PollId, req.VoterId)
 
 	if err == nil && previousVote != nil {
-		// check if vote is the same as previous vote
+		// check if vote is the same as previous vote option
 		if previousVote.IsTheSameVoteOption(req.PollOptionId) {
 			return errors.New("voter has already voted on this poll option")
 		}

@@ -33,3 +33,12 @@ func (repo *InMemoryVotesRepository) Delete(vote *entities.Vote) error {
 	}
 	return errors.New("vote not found")
 }
+
+func (repo *InMemoryVotesRepository) FindByPollIdAndVoterId(pollId string, voterId string) (*entities.Vote, error) {
+	for _, p := range repo.Votes {
+		if p.PollId.String() == pollId && p.VoterId.String() == voterId {
+			return p, nil
+		}
+	}
+	return nil, errors.New("vote not found")
+}
