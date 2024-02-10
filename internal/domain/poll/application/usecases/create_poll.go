@@ -7,15 +7,23 @@ import (
 )
 
 type CreatePollUseCase struct {
-	repo repositories.PollsRepository
+	repo            repositories.PollsRepository
+	participantRepo repositories.ParticipantsRepository
 }
 
 type CreatePollRequest struct {
 	Title   string
 	Options []string
+	OwnerId string
 }
 
 func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
+	p, err := uc.participantRepo.FindById(req.OwnerId)
+
+	if err != nil || p == nil {
+		return errors.ErrInvalidOwner
+	}
+
 	if len(req.Options) == 0 || len(req.Options) < 2 {
 		return errors.ErrInvalidPoll
 	}
@@ -30,7 +38,7 @@ func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
 		pollOptions = append(pollOptions, currentOption)
 	}
 
-	poll, err := entities.NewPoll(req.Title, pollOptions)
+	poll, err := entities.NewPoll(req.Title, pollOptions, p.Id)
 
 	if err != nil {
 		return errors.ErrInvalidPoll
@@ -43,8 +51,9 @@ func (uc *CreatePollUseCase) Execute(req CreatePollRequest) error {
 	return nil
 }
 
-func NewCreatePollUseCase(repo repositories.PollsRepository) *CreatePollUseCase {
+func NewCreatePollUseCase(repo repositories.PollsRepository, participantRepo repositories.ParticipantsRepository) *CreatePollUseCase {
 	return &CreatePollUseCase{
-		repo: repo,
+		repo:            repo,
+		participantRepo: participantRepo,
 	}
 }

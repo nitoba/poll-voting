@@ -10,6 +10,7 @@ type Poll struct {
 	Id        core.UniqueEntityId
 	Title     string
 	Options   []*PollOption
+	OwnerId   core.UniqueEntityId
 	CreatedAt time.Time
 }
 
@@ -42,7 +43,7 @@ type OptionalParams struct {
 	CreatedAt *time.Time
 }
 
-func NewPoll(title string, options []*PollOption, optional ...OptionalParams) (*Poll, error) {
+func NewPoll(title string, options []*PollOption, ownerId core.UniqueEntityId, optional ...OptionalParams) (*Poll, error) {
 	var id core.UniqueEntityId
 	if len(optional) > 0 && optional[0].Id != nil {
 		id = core.NewUniqueEntityId(optional[0].Id.String())
@@ -62,6 +63,7 @@ func NewPoll(title string, options []*PollOption, optional ...OptionalParams) (*
 		Id:        id,
 		Title:     title,
 		Options:   options,
+		OwnerId:   ownerId,
 		CreatedAt: createdAt,
 	}
 

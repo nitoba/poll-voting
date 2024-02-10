@@ -11,12 +11,14 @@ import (
 
 func TestNewPoll(t *testing.T) {
 	t.Run("with required params", func(t *testing.T) {
+		ownerId := core.NewUniqueEntityId()
+
 		options := []*entities.PollOption{
 			{Title: "Option 1"},
 			{Title: "Option 2"},
 		}
 
-		poll, err := entities.NewPoll("Test Poll", options)
+		poll, err := entities.NewPoll("Test Poll", options, ownerId)
 
 		assert.NoError(t, err)
 		assert.NotEmpty(t, poll.Id)
@@ -26,6 +28,8 @@ func TestNewPoll(t *testing.T) {
 	})
 
 	t.Run("with optional params", func(t *testing.T) {
+		ownerId := core.NewUniqueEntityId()
+
 		id := core.NewUniqueEntityId()
 		createdAt := time.Now().Add(-1 * time.Hour)
 
@@ -39,7 +43,7 @@ func TestNewPoll(t *testing.T) {
 			CreatedAt: &createdAt,
 		}
 
-		poll, err := entities.NewPoll("Test Poll", options, optional)
+		poll, err := entities.NewPoll("Test Poll", options, ownerId, optional)
 
 		assert.NoError(t, err)
 		assert.Equal(t, id, poll.Id)
