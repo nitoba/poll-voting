@@ -68,6 +68,8 @@ func TestDomainEvents(t *testing.T) {
 		core.DomainEvents().DispatchEventsForAggregate(customAggregate.Id)
 
 		mockCallBackFunction.AssertNumberOfCalls(t, "callbackFunction", 1)
+		assert.Len(t, customAggregate.GetEvents(), 0)
 		mockCallBackFunction.AssertExpectations(t)
+
 	})
 }
