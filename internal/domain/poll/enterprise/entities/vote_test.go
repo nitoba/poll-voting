@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
+	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,33 +16,33 @@ func TestVote_Equals(t *testing.T) {
 	})
 
 	t.Run("different objects with same ID are equal", func(t *testing.T) {
-		id := entity.NewUniqueEntityId()
+		id := core.NewUniqueEntityId()
 		vote1 := entities.Vote{Id: id}
 		vote2 := entities.Vote{Id: id}
 		assert.True(t, vote1.Equals(&vote2))
 	})
 
 	t.Run("different objects with different IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{Id: entity.NewUniqueEntityId()}
-		vote2 := entities.Vote{Id: entity.NewUniqueEntityId()}
+		vote1 := entities.Vote{Id: core.NewUniqueEntityId()}
+		vote2 := entities.Vote{Id: core.NewUniqueEntityId()}
 		assert.False(t, vote1.Equals(&vote2))
 	})
 
 	t.Run("objects with different poll IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{PollId: entity.NewUniqueEntityId()}
-		vote2 := entities.Vote{PollId: entity.NewUniqueEntityId()}
+		vote1 := entities.Vote{PollId: core.NewUniqueEntityId()}
+		vote2 := entities.Vote{PollId: core.NewUniqueEntityId()}
 		assert.False(t, vote1.Equals(&vote2))
 	})
 
 	t.Run("objects with different option IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{OptionId: entity.NewUniqueEntityId()}
-		vote2 := entities.Vote{OptionId: entity.NewUniqueEntityId()}
+		vote1 := entities.Vote{OptionId: core.NewUniqueEntityId()}
+		vote2 := entities.Vote{OptionId: core.NewUniqueEntityId()}
 		assert.False(t, vote1.Equals(&vote2))
 	})
 
 	t.Run("objects with different voter IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{VoterId: entity.NewUniqueEntityId()}
-		vote2 := entities.Vote{VoterId: entity.NewUniqueEntityId()}
+		vote1 := entities.Vote{VoterId: core.NewUniqueEntityId()}
+		vote2 := entities.Vote{VoterId: core.NewUniqueEntityId()}
 		assert.False(t, vote1.Equals(&vote2))
 	})
 
@@ -54,9 +54,9 @@ func TestVote_Equals(t *testing.T) {
 }
 func TestVote_NewVote(t *testing.T) {
 	t.Run("with no optional params", func(t *testing.T) {
-		pollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
 
 		vote, err := entities.NewVote(pollId, optionId, voterId)
 
@@ -69,10 +69,10 @@ func TestVote_NewVote(t *testing.T) {
 	})
 
 	t.Run("with custom id", func(t *testing.T) {
-		id := entity.NewUniqueEntityId()
-		pollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
+		id := core.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
 
 		vote, err := entities.NewVote(pollId, optionId, voterId, entities.OptionalVoteParams{
 			Id: &id,
@@ -83,10 +83,10 @@ func TestVote_NewVote(t *testing.T) {
 	})
 
 	t.Run("with custom poll id", func(t *testing.T) {
-		pollId := entity.NewUniqueEntityId()
-		customPollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		customPollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
 
 		vote, err := entities.NewVote(pollId, optionId, voterId, entities.OptionalVoteParams{
 			PollId: &customPollId,
@@ -97,10 +97,10 @@ func TestVote_NewVote(t *testing.T) {
 	})
 
 	t.Run("with custom option id", func(t *testing.T) {
-		pollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		customOptionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		customOptionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
 
 		vote, err := entities.NewVote(pollId, optionId, voterId, entities.OptionalVoteParams{
 			OptionId: &customOptionId,
@@ -111,10 +111,10 @@ func TestVote_NewVote(t *testing.T) {
 	})
 
 	t.Run("with custom voter id", func(t *testing.T) {
-		pollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
-		customVoterId := entity.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
+		customVoterId := core.NewUniqueEntityId()
 
 		vote, err := entities.NewVote(pollId, optionId, voterId, entities.OptionalVoteParams{
 			VoterId: &customVoterId,
@@ -125,9 +125,9 @@ func TestVote_NewVote(t *testing.T) {
 	})
 
 	t.Run("with custom created at", func(t *testing.T) {
-		pollId := entity.NewUniqueEntityId()
-		optionId := entity.NewUniqueEntityId()
-		voterId := entity.NewUniqueEntityId()
+		pollId := core.NewUniqueEntityId()
+		optionId := core.NewUniqueEntityId()
+		voterId := core.NewUniqueEntityId()
 		createdAt := time.Now().Add(-1 * time.Hour)
 
 		vote, err := entities.NewVote(pollId, optionId, voterId, entities.OptionalVoteParams{

@@ -3,11 +3,11 @@ package events
 import (
 	"time"
 
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
+	"github.com/nitoba/poll-voting/internal/domain/core"
 )
 
 type DomainEvent interface {
 	Name() string
 	OcurredAt() time.Time
-	GetAggregateId() entity.UniqueEntityId
+	GetAggregateId() core.UniqueEntityId
 }

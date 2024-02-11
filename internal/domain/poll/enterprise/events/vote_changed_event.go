@@ -3,7 +3,7 @@ package events
 import (
 	"time"
 
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
+	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
@@ -16,7 +16,7 @@ func (e *VoteChangedEvent) Name() string {
 	return "event.vote.changed"
 }
 
-func (e *VoteChangedEvent) GetAggregateId() entity.UniqueEntityId {
+func (e *VoteChangedEvent) GetAggregateId() core.UniqueEntityId {
 	return e.Vote.Id
 }
 

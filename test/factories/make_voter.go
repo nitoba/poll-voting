@@ -2,6 +2,7 @@ package factories
 
 import (
 	"github.com/jaswdr/faker"
+	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
@@ -9,13 +10,13 @@ import (
 
 func MakeVoter(props ...map[string]interface{}) *entities.Voter {
 	fake := faker.New()
-	id := entity.NewUniqueEntityId()
+	id := core.NewUniqueEntityId()
 	name := fake.Lorem().Word()
 	email := fake.Internet().Email()
 	password := fake.Internet().Password()
 
 	if len(props) > 0 && props[0]["id"] != nil {
-		id = entity.NewUniqueEntityId(props[0]["id"].(string))
+		id = core.NewUniqueEntityId(props[0]["id"].(string))
 	}
 
 	if len(props) > 0 && props[0]["name"] != nil {

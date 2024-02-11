@@ -3,6 +3,7 @@ package entities
 import (
 	"errors"
 
+	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
 )
@@ -36,12 +37,12 @@ func (*Voter) validate(name, password string) error {
 	return nil
 }
 
-func NewVoter(name string, email *value_objects.Email, password string, id ...entity.UniqueEntityId) (*Voter, error) {
-	var ID entity.UniqueEntityId
+func NewVoter(name string, email *value_objects.Email, password string, id ...core.UniqueEntityId) (*Voter, error) {
+	var ID core.UniqueEntityId
 	if len(id) > 0 {
 		ID = id[0]
 	} else {
-		ID = entity.NewUniqueEntityId()
+		ID = core.NewUniqueEntityId()
 	}
 
 	p := &Voter{
