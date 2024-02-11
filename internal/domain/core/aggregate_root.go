@@ -5,7 +5,7 @@ type AggregateRoot struct {
 	domainEvents []DomainEvent
 }
 
-func (ar AggregateRoot) GetEvents() []DomainEvent {
+func (ar *AggregateRoot) GetEvents() []DomainEvent {
 	return ar.domainEvents
 }
 

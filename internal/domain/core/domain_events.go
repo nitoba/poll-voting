@@ -1,8 +1,10 @@
 package core
 
-import "slices"
+import (
+	"slices"
+)
 
-type DomainEventCallback func(event DomainEvent)
+type DomainEventCallback func(event interface{})
 
 type domainEvents struct {
 	handlers         map[string][]DomainEventCallback
@@ -14,7 +16,7 @@ var instance *domainEvents = &domainEvents{
 }
 
 func (e *domainEvents) MarkAggregateForDispatch(aggregate interface{}) {
-	aggregateFound := e.findMarkedAggregateById(aggregate.(AggregateRoot).Id)
+	aggregateFound := e.findMarkedAggregateById(aggregate.(*AggregateRoot).Id)
 
 	if aggregateFound == nil {
 		e.markedAggregates = append(e.markedAggregates, aggregate)
@@ -23,7 +25,6 @@ func (e *domainEvents) MarkAggregateForDispatch(aggregate interface{}) {
 
 func (e *domainEvents) DispatchEventsForAggregate(id UniqueEntityId) {
 	aggregate := e.findMarkedAggregateById(id)
-
 	if aggregate != nil {
 		e.dispatchAggregateEvents(aggregate)
 		aggregate.(*AggregateRoot).ClearEvents()
@@ -51,7 +52,7 @@ func (e *domainEvents) ClearMarkedAggregates() {
 
 func (e *domainEvents) findMarkedAggregateById(id UniqueEntityId) interface{} {
 	for _, aggregate := range e.markedAggregates {
-		if aggregate.(AggregateRoot).Id.Equals(id) {
+		if aggregate.(*AggregateRoot).Id.Equals(id) {
 			return aggregate
 		}
 	}
@@ -60,7 +61,7 @@ func (e *domainEvents) findMarkedAggregateById(id UniqueEntityId) interface{} {
 }
 
 func (e *domainEvents) dispatchAggregateEvents(aggregate interface{}) {
-	domainEvents := aggregate.(AggregateRoot).GetEvents()
+	domainEvents := aggregate.(*AggregateRoot).GetEvents()
 	for _, event := range domainEvents {
 		e.dispatch(event)
 	}
@@ -69,8 +70,8 @@ func (e *domainEvents) dispatchAggregateEvents(aggregate interface{}) {
 func (e *domainEvents) removeAggregateFromMarkedDispatchList(aggregate interface{}) {
 	aggregateIndex := slices.Index(e.markedAggregates, aggregate)
 	if aggregateIndex != -1 {
-		slices.DeleteFunc[[]interface{}, interface{}](e.markedAggregates, func(a interface{}) bool {
-			return a.(AggregateRoot).Id == aggregate.(AggregateRoot).Id
+		slices.DeleteFunc(e.markedAggregates, func(a interface{}) bool {
+			return a.(*AggregateRoot).Id == aggregate.(*AggregateRoot).Id
 		})
 	}
 }
