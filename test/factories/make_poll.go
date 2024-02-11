@@ -44,7 +44,9 @@ func MakePool(props ...OptionalPollParams) *entities.Poll {
 	}
 
 	return &entities.Poll{
-		Id:        id,
+		Entity: core.Entity{
+			Id: id,
+		},
 		Title:     title,
 		Options:   pollOptions,
 		CreatedAt: createdAt,

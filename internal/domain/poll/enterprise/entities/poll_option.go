@@ -3,7 +3,7 @@ package entities
 import "github.com/nitoba/poll-voting/internal/domain/core"
 
 type PollOption struct {
-	Id    core.UniqueEntityId
+	core.Entity
 	Title string
 }
 
@@ -25,7 +25,9 @@ func NewPollOption(title string, id ...core.UniqueEntityId) (*PollOption, error)
 		ID = core.NewUniqueEntityId()
 	}
 	p := &PollOption{
-		Id:    ID,
+		Entity: core.Entity{
+			Id: ID,
+		},
 		Title: title,
 	}
 

@@ -24,7 +24,9 @@ func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
 	}
 
 	return &entities.PollOption{
-		Id:    id,
+		Entity: core.Entity{
+			Id: id,
+		},
 		Title: title,
 	}
 }

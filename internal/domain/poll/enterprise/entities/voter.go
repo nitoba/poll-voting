@@ -10,7 +10,7 @@ import (
 var ErrMissingArgument = errors.New("missing argument")
 
 type Voter struct {
-	Id       core.UniqueEntityId
+	core.Entity
 	Name     string
 	Email    *value_objects.Email
 	Password string
@@ -45,7 +45,9 @@ func NewVoter(name string, email *value_objects.Email, password string, id ...co
 	}
 
 	p := &Voter{
-		Id:       ID,
+		Entity: core.Entity{
+			Id: ID,
+		},
 		Name:     name,
 		Email:    email,
 		Password: password,

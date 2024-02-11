@@ -6,6 +6,7 @@ import (
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+	"github.com/nitoba/poll-voting/test/factories"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -100,14 +101,17 @@ func TestPoll_Equals(t *testing.T) {
 
 	t.Run("different objects with same ID are equal", func(t *testing.T) {
 		id := core.NewUniqueEntityId()
-		poll1 := entities.Poll{Id: id}
-		poll2 := entities.Poll{Id: id}
-		assert.True(t, poll1.Equals(&poll2))
+		poll1 := factories.MakePool(factories.OptionalPollParams{Id: &id})
+		poll2 := factories.MakePool(factories.OptionalPollParams{Id: &id})
+		assert.True(t, poll1.Equals(poll2))
 	})
 
 	t.Run("different objects with different IDs are not equal", func(t *testing.T) {
-		poll1 := entities.Poll{Id: core.NewUniqueEntityId()}
-		poll2 := entities.Poll{Id: core.NewUniqueEntityId()}
-		assert.False(t, poll1.Equals(&poll2))
+		id1 := core.NewUniqueEntityId()
+		id2 := core.NewUniqueEntityId()
+
+		poll1 := factories.MakePool(factories.OptionalPollParams{Id: &id1})
+		poll2 := factories.MakePool(factories.OptionalPollParams{Id: &id2})
+		assert.False(t, poll1.Equals(poll2))
 	})
 }

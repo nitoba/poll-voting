@@ -33,7 +33,9 @@ func MakeVoter(props ...map[string]interface{}) *entities.Voter {
 	emailVo, _ := value_objects.NewEmail(email)
 
 	return &entities.Voter{
-		Id:       id,
+		Entity: core.Entity{
+			Id: id,
+		},
 		Name:     name,
 		Email:    emailVo,
 		Password: password,
