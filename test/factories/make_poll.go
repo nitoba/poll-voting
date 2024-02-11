@@ -5,7 +5,6 @@ import (
 
 	"github.com/jaswdr/faker"
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
@@ -45,7 +44,7 @@ func MakePool(props ...OptionalPollParams) *entities.Poll {
 	}
 
 	return &entities.Poll{
-		Entity: entity.Entity{
+		Entity: core.Entity{
 			Id: id,
 		},
 		Title:     title,

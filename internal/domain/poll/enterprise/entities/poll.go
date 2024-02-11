@@ -4,11 +4,10 @@ import (
 	"time"
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 )
 
 type Poll struct {
-	entity.Entity
+	core.Entity
 	Title     string
 	Options   []*PollOption
 	OwnerId   core.UniqueEntityId
@@ -61,7 +60,7 @@ func NewPoll(title string, options []*PollOption, ownerId core.UniqueEntityId, o
 	}
 
 	p := &Poll{
-		Entity: entity.Entity{
+		Entity: core.Entity{
 			Id: id,
 		},
 		Title:     title,

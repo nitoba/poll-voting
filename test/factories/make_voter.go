@@ -3,7 +3,6 @@ package factories
 import (
 	"github.com/jaswdr/faker"
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
 )
@@ -34,7 +33,7 @@ func MakeVoter(props ...map[string]interface{}) *entities.Voter {
 	emailVo, _ := value_objects.NewEmail(email)
 
 	return &entities.Voter{
-		Entity: entity.Entity{
+		Entity: core.Entity{
 			Id: id,
 		},
 		Name:     name,

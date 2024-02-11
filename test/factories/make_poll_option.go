@@ -3,7 +3,6 @@ package factories
 import (
 	"github.com/jaswdr/faker"
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
@@ -25,7 +24,7 @@ func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
 	}
 
 	return &entities.PollOption{
-		Entity: entity.Entity{
+		Entity: core.Entity{
 			Id: id,
 		},
 		Title: title,
