@@ -2,21 +2,21 @@ package factories
 
 import (
 	"github.com/jaswdr/faker"
-	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
 type OptionalPollOptionParams struct {
-	Id    *core.UniqueEntityId
+	Id    *entity.UniqueEntityId
 	Title *string
 }
 
 func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
 	fake := faker.New()
-	id := core.NewUniqueEntityId()
+	id := entity.NewUniqueEntityId()
 	title := fake.Lorem().Word()
 	if len(props) > 0 && props[0].Id != nil {
-		id = core.NewUniqueEntityId(props[0].Id.String())
+		id = entity.NewUniqueEntityId(props[0].Id.String())
 	}
 
 	if len(props) > 0 && props[0].Title != nil {
@@ -24,7 +24,7 @@ func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
 	}
 
 	return &entities.PollOption{
-		Entity: core.Entity{
+		Entity: entity.Entity{
 			Id: id,
 		},
 		Title: title,

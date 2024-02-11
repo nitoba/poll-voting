@@ -3,14 +3,14 @@ package entities
 import (
 	"time"
 
-	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 )
 
 type Vote struct {
-	Id        core.UniqueEntityId
-	PollId    core.UniqueEntityId
-	OptionId  core.UniqueEntityId
-	VoterId   core.UniqueEntityId
+	Id        entity.UniqueEntityId
+	PollId    entity.UniqueEntityId
+	OptionId  entity.UniqueEntityId
+	VoterId   entity.UniqueEntityId
 	CreatedAt time.Time
 }
 
@@ -35,46 +35,46 @@ func (v *Vote) Equals(other *Vote) bool {
 }
 
 type OptionalVoteParams struct {
-	Id        *core.UniqueEntityId
+	Id        *entity.UniqueEntityId
 	CreatedAt *time.Time
-	PollId    *core.UniqueEntityId
-	OptionId  *core.UniqueEntityId
-	VoterId   *core.UniqueEntityId
+	PollId    *entity.UniqueEntityId
+	OptionId  *entity.UniqueEntityId
+	VoterId   *entity.UniqueEntityId
 }
 
 func (v *Vote) IsTheSameVoteOption(optionId string) bool {
 	return v.OptionId.String() == optionId
 }
 func (v *Vote) ChangeVoteOption(optionId string) {
-	v.OptionId = core.NewUniqueEntityId(optionId)
+	v.OptionId = entity.NewUniqueEntityId(optionId)
 }
 
-func NewVote(pollId core.UniqueEntityId, optionId core.UniqueEntityId, voterId core.UniqueEntityId, optional ...OptionalVoteParams) (*Vote, error) {
-	var id core.UniqueEntityId
-	var optionIdVo core.UniqueEntityId
-	var pollIdVo core.UniqueEntityId
-	var voterIdVo core.UniqueEntityId
+func NewVote(pollId entity.UniqueEntityId, optionId entity.UniqueEntityId, voterId entity.UniqueEntityId, optional ...OptionalVoteParams) (*Vote, error) {
+	var id entity.UniqueEntityId
+	var optionIdVo entity.UniqueEntityId
+	var pollIdVo entity.UniqueEntityId
+	var voterIdVo entity.UniqueEntityId
 	var createdAt time.Time
 	if len(optional) > 0 && optional[0].Id != nil {
-		id = core.NewUniqueEntityId(optional[0].Id.String())
+		id = entity.NewUniqueEntityId(optional[0].Id.String())
 	} else {
-		id = core.NewUniqueEntityId()
+		id = entity.NewUniqueEntityId()
 	}
 
 	if len(optional) > 0 && optional[0].PollId != nil {
-		pollIdVo = core.NewUniqueEntityId(optional[0].PollId.String())
+		pollIdVo = entity.NewUniqueEntityId(optional[0].PollId.String())
 	} else {
 		pollIdVo = pollId
 	}
 
 	if len(optional) > 0 && optional[0].OptionId != nil {
-		optionIdVo = core.NewUniqueEntityId(optional[0].OptionId.String())
+		optionIdVo = entity.NewUniqueEntityId(optional[0].OptionId.String())
 	} else {
 		optionIdVo = optionId
 	}
 
 	if len(optional) > 0 && optional[0].VoterId != nil {
-		voterIdVo = core.NewUniqueEntityId(optional[0].VoterId.String())
+		voterIdVo = entity.NewUniqueEntityId(optional[0].VoterId.String())
 	} else {
 		voterIdVo = voterId
 	}

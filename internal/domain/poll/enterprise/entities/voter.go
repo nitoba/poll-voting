@@ -3,14 +3,14 @@ package entities
 import (
 	"errors"
 
-	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/value_objects"
 )
 
 var ErrMissingArgument = errors.New("missing argument")
 
 type Voter struct {
-	core.Entity
+	entity.Entity
 	Name     string
 	Email    *value_objects.Email
 	Password string
@@ -36,16 +36,16 @@ func (*Voter) validate(name, password string) error {
 	return nil
 }
 
-func NewVoter(name string, email *value_objects.Email, password string, id ...core.UniqueEntityId) (*Voter, error) {
-	var ID core.UniqueEntityId
+func NewVoter(name string, email *value_objects.Email, password string, id ...entity.UniqueEntityId) (*Voter, error) {
+	var ID entity.UniqueEntityId
 	if len(id) > 0 {
 		ID = id[0]
 	} else {
-		ID = core.NewUniqueEntityId()
+		ID = entity.NewUniqueEntityId()
 	}
 
 	p := &Voter{
-		Entity: core.Entity{
+		Entity: entity.Entity{
 			Id: ID,
 		},
 		Name:     name,

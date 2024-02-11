@@ -4,7 +4,7 @@ import (
 	"errors"
 	"slices"
 
-	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 	"github.com/nitoba/poll-voting/internal/domain/poll/application/repositories"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
@@ -63,7 +63,7 @@ func (u *VoteOnPollUseCase) Execute(req *VoteOnPollUseCaseRequest) error {
 		return nil
 	} else {
 		// if previous vote does not exist, create a new one
-		vote, err := entities.NewVote(poll.Id, core.NewUniqueEntityId(req.PollOptionId), voter.Id)
+		vote, err := entities.NewVote(poll.Id, entity.NewUniqueEntityId(req.PollOptionId), voter.Id)
 
 		if err != nil {
 			return err

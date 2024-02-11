@@ -3,14 +3,14 @@ package entities
 import (
 	"time"
 
-	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/core/entity"
 )
 
 type Poll struct {
-	core.Entity
+	entity.Entity
 	Title     string
 	Options   []*PollOption
-	OwnerId   core.UniqueEntityId
+	OwnerId   entity.UniqueEntityId
 	CreatedAt time.Time
 }
 
@@ -39,16 +39,16 @@ func (p *Poll) Equals(other *Poll) bool {
 }
 
 type OptionalParams struct {
-	Id        *core.UniqueEntityId
+	Id        *entity.UniqueEntityId
 	CreatedAt *time.Time
 }
 
-func NewPoll(title string, options []*PollOption, ownerId core.UniqueEntityId, optional ...OptionalParams) (*Poll, error) {
-	var id core.UniqueEntityId
+func NewPoll(title string, options []*PollOption, ownerId entity.UniqueEntityId, optional ...OptionalParams) (*Poll, error) {
+	var id entity.UniqueEntityId
 	if len(optional) > 0 && optional[0].Id != nil {
-		id = core.NewUniqueEntityId(optional[0].Id.String())
+		id = entity.NewUniqueEntityId(optional[0].Id.String())
 	} else {
-		id = core.NewUniqueEntityId()
+		id = entity.NewUniqueEntityId()
 	}
 
 	var createdAt time.Time
@@ -60,7 +60,7 @@ func NewPoll(title string, options []*PollOption, ownerId core.UniqueEntityId, o
 	}
 
 	p := &Poll{
-		Entity: core.Entity{
+		Entity: entity.Entity{
 			Id: id,
 		},
 		Title:     title,

@@ -1,9 +1,9 @@
 package entities
 
-import "github.com/nitoba/poll-voting/internal/domain/core"
+import "github.com/nitoba/poll-voting/internal/domain/core/entity"
 
 type PollOption struct {
-	core.Entity
+	entity.Entity
 	Title string
 }
 
@@ -17,15 +17,15 @@ func (p *PollOption) Equals(other *PollOption) bool {
 	return p.Id.String() == other.Id.String()
 }
 
-func NewPollOption(title string, id ...core.UniqueEntityId) (*PollOption, error) {
-	var ID core.UniqueEntityId
+func NewPollOption(title string, id ...entity.UniqueEntityId) (*PollOption, error) {
+	var ID entity.UniqueEntityId
 	if len(id) > 0 {
 		ID = id[0]
 	} else {
-		ID = core.NewUniqueEntityId()
+		ID = entity.NewUniqueEntityId()
 	}
 	p := &PollOption{
-		Entity: core.Entity{
+		Entity: entity.Entity{
 			Id: ID,
 		},
 		Title: title,
