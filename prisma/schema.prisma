@@ -1,0 +1,60 @@
+datasource db {
+    // could be postgresql or mysql
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator db {
+    provider = "go run github.com/steebchen/prisma-client-go"
+}
+
+model Voter {
+    id       String @id @default(uuid())
+    name     String
+    email    String @unique
+    password String
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    Votes     Votes[]
+
+    @@map("voters")
+}
+
+model Poll {
+    id        String       @id @default(uuid())
+    title     String
+    createdAt DateTime     @default(now()) @map("created_at")
+    updatedAt DateTime     @updatedAt @map("updated_at")
+    options   PollOption[]
+    Votes     Votes[]
+
+    @@map("polls")
+}
+
+model PollOption {
+    id     String @id @default(uuid())
+    title  String
+    pollId String
+
+    poll  Poll    @relation(fields: [pollId], references: [id])
+    Votes Votes[]
+
+    @@map("poll_options")
+}
+
+model Votes {
+    id           String   @id @default(uuid())
+    voteId       String
+    pollId       String
+    pollOptionId String
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
+
+    poll       Poll       @relation(fields: [pollId], references: [id])
+    pollOption PollOption @relation(fields: [pollOptionId], references: [id])
+    vote       Voter      @relation(fields: [voteId], references: [id])
+
+    @@unique([pollId, voteId])
+    @@map("votes")
+}
