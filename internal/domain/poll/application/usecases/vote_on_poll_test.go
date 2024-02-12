@@ -18,7 +18,9 @@ type VoteOnPollUseCaseConfig struct {
 }
 
 func makeVoteOnPollUseCase() VoteOnPollUseCaseConfig {
-	countingRepo := &repositories_test.InMemoryCountingVotesRepository{}
+	countingRepo := &repositories_test.InMemoryCountingVotesRepository{
+		Votes: make(map[string]map[string]int),
+	}
 	pollRepo := &repositories_test.InMemoryPollsRepository{}
 	voteRepo := &repositories_test.InMemoryVotesRepository{
 		CountingRepository: *countingRepo,
