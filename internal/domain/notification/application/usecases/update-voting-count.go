@@ -1,13 +1,13 @@
 package usecases
 
 import (
-	"github.com/nitoba/poll-voting/internal/domain/notification/application/repositories"
+	"github.com/nitoba/poll-voting/internal/domain/notification/application/messaging"
 	"github.com/nitoba/poll-voting/internal/domain/notification/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/domain/notification/enterprise/value_objects"
 )
 
 type UpdateVotingCountUseCase struct {
-	repo repositories.NotificationsRepository
+	messagePublisher messaging.MessagePublisher
 }
 
 type UpdateVotingCountUseCaseRequest struct {
@@ -21,14 +21,14 @@ func (u *UpdateVotingCountUseCase) Execute(req *UpdateVotingCountUseCaseRequest)
 	newVote := value_objects.CreateNewVote(req.PollOptionId, req.CountOfVotes)
 	notification := entities.NewNotification("New voting count", newVote)
 
-	if err := u.repo.Create(notification); err != nil {
+	if err := u.messagePublisher.Publish(notification); err != nil {
 		return err
 	}
 	return nil
 }
 
-func NewUpdateVotingCountUseCase(repo repositories.NotificationsRepository) *UpdateVotingCountUseCase {
+func NewUpdateVotingCountUseCase(messagePublisher messaging.MessagePublisher) *UpdateVotingCountUseCase {
 	return &UpdateVotingCountUseCase{
-		repo: repo,
+		messagePublisher: messagePublisher,
 	}
 }
