@@ -5,7 +5,7 @@ type NewVote struct {
 	Count        int
 }
 
-func (n NewVote) NewVote(pollOptionId string, count int) *NewVote {
+func CreateNewVote(pollOptionId string, count int) *NewVote {
 	return &NewVote{
 		PollOptionId: pollOptionId,
 		Count:        count,

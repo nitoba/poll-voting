@@ -10,11 +10,12 @@ import (
 type Notification struct {
 	core.Entity
 	Title     string
-	Content   value_objects.NewVote
+	Content   *value_objects.NewVote
 	CreatedAt time.Time
 }
 
-func NewNotification(title string, content value_objects.NewVote) *Notification {
+func NewNotification(title string, content *value_objects.NewVote, id ...core.UniqueEntityId) *Notification {
+
 	return &Notification{
 		Entity:    *core.NewEntity(),
 		Title:     title,

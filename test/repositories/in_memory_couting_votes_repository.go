@@ -23,6 +23,17 @@ func (r *InMemoryCountingVotesRepository) DecrementCountVotesByOptionId(pollId s
 	return r.Votes[pollId][optionId], nil
 }
 
+func (r *InMemoryCountingVotesRepository) CountVotesByOptionId(pollId string, optionId string) (int, error) {
+	if _, ok := r.Votes[pollId]; !ok {
+		r.Votes[pollId] = make(map[string]int)
+	}
+	if _, ok := r.Votes[pollId][optionId]; !ok {
+		r.Votes[pollId][optionId] = 0
+	}
+
+	return r.Votes[pollId][optionId], nil
+}
+
 func NewInMemoryCountingVotesRepository() *InMemoryCountingVotesRepository {
 	return &InMemoryCountingVotesRepository{
 		Votes: make(map[string]map[string]int),
