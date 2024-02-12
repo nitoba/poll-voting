@@ -32,7 +32,7 @@ func (repo *InMemoryVotesRepository) Delete(vote *entities.Vote) error {
 	for i, v := range repo.Votes {
 		if v.OptionId.String() == vote.OptionId.String() {
 			repo.Votes = append(repo.Votes[:i], repo.Votes[i+1:]...)
-			// repo.CountingRepository.DecrementCountVotesByOptionId(vote.PollId.String(), vote.OptionId.String())
+			repo.CountingRepository.DecrementCountVotesByOptionId(vote.PollId.String(), vote.OptionId.String())
 			return nil
 		}
 	}

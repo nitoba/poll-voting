@@ -6,13 +6,9 @@ type InMemoryCountingVotesRepository struct {
 
 func (r *InMemoryCountingVotesRepository) IncrementCountVotesByOptionId(pollId string, optionId string) (int, error) {
 	if _, ok := r.Votes[pollId]; !ok {
-		r.Votes = make(map[string]map[string]int)
 		r.Votes[pollId] = make(map[string]int)
-		r.Votes[pollId][optionId] = 1
-	} else {
-		r.Votes[pollId][optionId]++
 	}
-
+	r.Votes[pollId][optionId]++
 	return r.Votes[pollId][optionId], nil
 }
 

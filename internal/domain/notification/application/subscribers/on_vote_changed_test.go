@@ -12,23 +12,23 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type UseCaseVoteCreatedMock struct {
+type UseCaseVoteChangedMock struct {
 	mock.Mock
 }
 
-func (u *UseCaseVoteCreatedMock) Execute(req *usecases.UpdateVotingCountUseCaseRequest) error {
+func (u *UseCaseVoteChangedMock) Execute(req *usecases.UpdateVotingCountUseCaseRequest) error {
 	u.Called(req)
 	return nil
 }
 
-type OnVoteCreatedTestConfig struct {
+type OnVoteChangedTestConfig struct {
 	votesRepository         *repositories_test.InMemoryVotesRepository
 	countingVotesRepository *repositories_test.InMemoryCountingVotesRepository
 	messagePublisher        *messaging_test.InMemoryMessagePublisher
-	usecase                 *UseCaseVoteCreatedMock
+	usecase                 *UseCaseVoteChangedMock
 }
 
-func makeCreateOnVoteCreatedTestConfig() OnVoteCreatedTestConfig {
+func makeCreateOnVoteChangedTestConfig() OnVoteChangedTestConfig {
 	countingVotesRepository := &repositories_test.InMemoryCountingVotesRepository{
 		Votes: make(map[string]map[string]int),
 	}
@@ -36,11 +36,12 @@ func makeCreateOnVoteCreatedTestConfig() OnVoteCreatedTestConfig {
 		CountingRepository: *countingVotesRepository,
 	}
 	messagePublisher := &messaging_test.InMemoryMessagePublisher{}
-	usecase := &UseCaseVoteCreatedMock{}
+	usecase := &UseCaseVoteChangedMock{}
 
+	subscribers.NewOnVoteChangedHandler(usecase, countingVotesRepository)
 	subscribers.NewOnVoteCreatedHandler(usecase, countingVotesRepository)
 
-	return OnVoteCreatedTestConfig{
+	return OnVoteChangedTestConfig{
 		votesRepository:         votesRepository,
 		countingVotesRepository: countingVotesRepository,
 		messagePublisher:        messagePublisher,
@@ -48,9 +49,9 @@ func makeCreateOnVoteCreatedTestConfig() OnVoteCreatedTestConfig {
 	}
 }
 
-func TestOnVoteCreated(t *testing.T) {
-	t.Run("it should be able to send a notification of the update counting votes when created one", func(t *testing.T) {
-		config := makeCreateOnVoteCreatedTestConfig()
+func TestOnVoteChanged(t *testing.T) {
+	t.Run("it should be able to send a notification of the update counting votes when changed one", func(t *testing.T) {
+		config := makeCreateOnVoteChangedTestConfig()
 		config.usecase.On("Execute", mock.Anything).Return(nil)
 
 		poll := factories.MakePool()
@@ -63,7 +64,20 @@ func TestOnVoteCreated(t *testing.T) {
 		config.votesRepository.Create(vote)
 
 		config.usecase.AssertCalled(t, "Execute", mock.Anything)
-		config.usecase.AssertNumberOfCalls(t, "Execute", 1)
+
 		assert.Equal(t, 1, config.countingVotesRepository.Votes[poll.Id.String()][poll.Options[0].Id.String()])
+
+		// when the vote is changed, the domain events must be dispatched
+		config.votesRepository.Delete(vote)
+
+		vote.ChangeVoteOption(poll.Options[1].Id.String())
+
+		config.votesRepository.Create(vote)
+
+		config.usecase.AssertCalled(t, "Execute", mock.Anything)
+		config.usecase.AssertNumberOfCalls(t, "Execute", 2)
+		assert.Equal(t, 0, config.countingVotesRepository.Votes[poll.Id.String()][poll.Options[0].Id.String()])
+		assert.Equal(t, 1, config.countingVotesRepository.Votes[poll.Id.String()][poll.Options[1].Id.String()])
+
 	})
 }

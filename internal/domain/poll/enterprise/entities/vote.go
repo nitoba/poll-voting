@@ -44,6 +44,7 @@ func (v *Vote) IsTheSameVoteOption(optionId string) bool {
 }
 func (v *Vote) ChangeVoteOption(optionId string) {
 	v.OptionId = core.NewUniqueEntityId(optionId)
+	v.AddDomainEvent(events.NewVoteChangedEvent(v.Id, v.PollId, v.OptionId))
 }
 
 func NewVote(pollId core.UniqueEntityId, optionId core.UniqueEntityId, voterId core.UniqueEntityId, optional ...OptionalVoteParams) (*Vote, error) {
