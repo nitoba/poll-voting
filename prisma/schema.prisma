@@ -14,20 +14,25 @@ model Voter {
     email    String @unique
     password String
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    Votes     Votes[]
+    createdAt  DateTime     @default(now()) @map("created_at")
+    updatedAt  DateTime     @updatedAt @map("updated_at")
+    Votes      Votes[]
+    PollOption PollOption[]
+    Poll       Poll[]
 
     @@map("voters")
 }
 
 model Poll {
-    id        String       @id @default(uuid())
+    id        String   @id @default(uuid())
     title     String
-    createdAt DateTime     @default(now()) @map("created_at")
-    updatedAt DateTime     @updatedAt @map("updated_at")
-    options   PollOption[]
-    Votes     Votes[]
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+    ownerId   String
+
+    owner   Voter        @relation(fields: [ownerId], references: [id])
+    options PollOption[]
+    Votes   Votes[]
 
     @@map("polls")
 }
@@ -37,8 +42,10 @@ model PollOption {
     title  String
     pollId String
 
-    poll  Poll    @relation(fields: [pollId], references: [id])
-    Votes Votes[]
+    poll    Poll    @relation(fields: [pollId], references: [id])
+    Votes   Votes[]
+    Voter   Voter?  @relation(fields: [voterId], references: [id])
+    voterId String?
 
     @@map("poll_options")
 }
