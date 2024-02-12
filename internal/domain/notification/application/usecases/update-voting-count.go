@@ -6,6 +6,10 @@ import (
 	"github.com/nitoba/poll-voting/internal/domain/notification/enterprise/value_objects"
 )
 
+type UpdateVotingCountUseCaseInterface interface {
+	Execute(req *UpdateVotingCountUseCaseRequest) error
+}
+
 type UpdateVotingCountUseCase struct {
 	messagePublisher messaging.MessagePublisher
 }

@@ -1,6 +1,6 @@
 package core
 
 type EventHandler interface {
-	Notify(event DomainEvent)
+	// Notify(event DomainEvent)
 	SetupSubscriptions()
 }

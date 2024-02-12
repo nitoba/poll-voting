@@ -4,12 +4,13 @@ import (
 	"time"
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
 type VoteCreatedEvent struct {
 	ocurredAt time.Time
-	Vote      entities.Vote
+	VoteId    core.UniqueEntityId
+	PollId    core.UniqueEntityId
+	OptionId  core.UniqueEntityId
 }
 
 func (e *VoteCreatedEvent) Name() string {
@@ -17,16 +18,18 @@ func (e *VoteCreatedEvent) Name() string {
 }
 
 func (e *VoteCreatedEvent) GetAggregateId() core.UniqueEntityId {
-	return e.Vote.Id
+	return e.VoteId
 }
 
 func (e *VoteCreatedEvent) OcurredAt() time.Time {
 	return e.ocurredAt
 }
 
-func NewVoteCreatedEvent(vote entities.Vote) *VoteCreatedEvent {
+func NewVoteCreatedEvent(voteId, pollId, optionId core.UniqueEntityId) *VoteCreatedEvent {
 	return &VoteCreatedEvent{
-		Vote:      vote,
+		VoteId:    voteId,
+		PollId:    pollId,
+		OptionId:  optionId,
 		ocurredAt: time.Now(),
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/events"
 )
 
 type Vote struct {
@@ -81,11 +82,15 @@ func NewVote(pollId core.UniqueEntityId, optionId core.UniqueEntityId, voterId c
 		createdAt = time.Now()
 	}
 
-	return &Vote{
+	vote := &Vote{
 		AggregateRoot: *core.NewAggregateRoot(id),
 		PollId:        pollIdVo,
 		OptionId:      optionIdVo,
 		VoterId:       voterIdVo,
 		CreatedAt:     createdAt,
-	}, nil
+	}
+
+	vote.AddDomainEvent(events.NewVoteCreatedEvent(vote.Id, vote.PollId, vote.OptionId))
+
+	return vote, nil
 }
