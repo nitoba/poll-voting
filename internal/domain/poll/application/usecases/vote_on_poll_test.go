@@ -10,15 +10,19 @@ import (
 )
 
 type VoteOnPollUseCaseConfig struct {
-	pollRepo  *repositories_test.InMemoryPollsRepository
-	voteRepo  *repositories_test.InMemoryVotesRepository
-	voterRepo *repositories_test.InMemoryVotersRepository
-	sut       *usecases.VoteOnPollUseCase
+	countingRepo *repositories_test.InMemoryCountingVotesRepository
+	pollRepo     *repositories_test.InMemoryPollsRepository
+	voteRepo     *repositories_test.InMemoryVotesRepository
+	voterRepo    *repositories_test.InMemoryVotersRepository
+	sut          *usecases.VoteOnPollUseCase
 }
 
 func makeVoteOnPollUseCase() VoteOnPollUseCaseConfig {
+	countingRepo := &repositories_test.InMemoryCountingVotesRepository{}
 	pollRepo := &repositories_test.InMemoryPollsRepository{}
-	voteRepo := &repositories_test.InMemoryVotesRepository{}
+	voteRepo := &repositories_test.InMemoryVotesRepository{
+		CountingRepository: *countingRepo,
+	}
 	voterRepo := &repositories_test.InMemoryVotersRepository{}
 	sut := usecases.NewVoteOnPollUseCase(voteRepo, pollRepo, voterRepo)
 
