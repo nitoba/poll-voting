@@ -1,15 +1,13 @@
 package value_objects
 
 type NewVote struct {
-	VoterId      string
-	PollId       string
 	PollOptionId string
+	Count        int
 }
 
-func (n NewVote) NewVote(voterId, pollId, pollOptionId string) *NewVote {
+func (n NewVote) NewVote(pollOptionId string, count int) *NewVote {
 	return &NewVote{
-		VoterId:      voterId,
-		PollId:       pollId,
 		PollOptionId: pollOptionId,
+		Count:        count,
 	}
 }

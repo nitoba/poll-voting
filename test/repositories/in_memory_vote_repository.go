@@ -4,16 +4,18 @@ import (
 	"errors"
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
+	"github.com/nitoba/poll-voting/internal/domain/poll/application/repositories"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
 type InMemoryVotesRepository struct {
-	Votes []*entities.Vote
+	countingRepository repositories.CountingVotesRepository
+	Votes              []*entities.Vote
 }
 
 func (repo *InMemoryVotesRepository) Create(vote *entities.Vote) error {
 	repo.Votes = append(repo.Votes, vote)
-	// TODO: before dispatch events, store the count votes in redis
+	repo.countingRepository.IncrementCountVotesByOptionId(vote.PollId.String(), vote.OptionId.String())
 	core.DomainEvents().DispatchEventsForAggregate(vote.Id)
 	return nil
 }
@@ -31,6 +33,7 @@ func (repo *InMemoryVotesRepository) Delete(vote *entities.Vote) error {
 	for i, v := range repo.Votes {
 		if v.OptionId.String() == vote.OptionId.String() {
 			repo.Votes = append(repo.Votes[:i], repo.Votes[i+1:]...)
+			repo.countingRepository.DecrementCountVotesByOptionId(vote.PollId.String(), vote.OptionId.String())
 			return nil
 		}
 	}
