@@ -61,6 +61,7 @@ func TestDomainEvents(t *testing.T) {
 		mockCallBackFunction.On("callbackFunction", mock.Anything).Return(nil)
 
 		core.DomainEvents().Register(mockCallBackFunction.callbackFunction, "event.custom.aggregate.created")
+		core.DomainEvents().Register(mockCallBackFunction.callbackFunction, "event.custom.aggregate")
 
 		customAggregate := NewCustomAggregate()
 		assert.Len(t, customAggregate.GetEvents(), 1)

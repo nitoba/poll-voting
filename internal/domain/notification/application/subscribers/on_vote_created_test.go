@@ -49,7 +49,7 @@ func TestOnVoteCreated(t *testing.T) {
 		config.usecase.On("Execute", mock.Anything).Return(nil)
 
 		poll := factories.MakePool()
-		// mask the vote to dispatch the event
+		// mask the aggregate vote to dispatch the event
 		vote := factories.MakeVote(factories.OptionalVoteParams{
 			PollId:   &poll.Id,
 			OptionId: &poll.Options[0].Id,
@@ -58,5 +58,6 @@ func TestOnVoteCreated(t *testing.T) {
 		config.votesRepository.Create(vote)
 
 		config.usecase.AssertCalled(t, "Execute", mock.Anything)
+		config.usecase.AssertNumberOfCalls(t, "Execute", 1)
 	})
 }
