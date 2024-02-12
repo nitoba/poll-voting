@@ -20,7 +20,7 @@ func (ar *AggregateRoot) ClearEvents() {
 
 func NewAggregateRoot(id ...UniqueEntityId) *AggregateRoot {
 	if len(id) == 0 {
-		id[0] = NewUniqueEntityId()
+		id = append(id, NewUniqueEntityId())
 	}
 
 	return &AggregateRoot{

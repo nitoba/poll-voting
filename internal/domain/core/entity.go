@@ -7,8 +7,10 @@ type Entity struct {
 
 func NewEntity(id ...UniqueEntityId) *Entity {
 	if len(id) == 0 {
-		id[0] = NewUniqueEntityId()
+		id = append(id, NewUniqueEntityId())
 	}
+
+	println("Tamanho de id: ", len(id))
 
 	return &Entity{
 		Id: id[0],
