@@ -13,6 +13,7 @@ type InMemoryVotesRepository struct {
 
 func (repo *InMemoryVotesRepository) Create(vote *entities.Vote) error {
 	repo.Votes = append(repo.Votes, vote)
+	// TODO: before dispatch events, store the count votes in redis
 	core.DomainEvents().DispatchEventsForAggregate(vote.Id)
 	return nil
 }
