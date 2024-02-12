@@ -45,9 +45,7 @@ func NewVoter(name string, email *value_objects.Email, password string, id ...co
 	}
 
 	p := &Voter{
-		Entity: core.Entity{
-			Id: ID,
-		},
+		Entity:   *core.NewEntity(ID),
 		Name:     name,
 		Email:    email,
 		Password: password,

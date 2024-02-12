@@ -7,7 +7,7 @@ import (
 )
 
 type Vote struct {
-	Id        core.UniqueEntityId
+	core.AggregateRoot
 	PollId    core.UniqueEntityId
 	OptionId  core.UniqueEntityId
 	VoterId   core.UniqueEntityId
@@ -16,10 +16,6 @@ type Vote struct {
 
 func (v *Vote) Equals(other *Vote) bool {
 	if v == nil || other == nil {
-		return false
-	}
-
-	if v.PollId.String() != other.PollId.String() || v.OptionId.String() != other.OptionId.String() || v.VoterId.String() != other.VoterId.String() {
 		return false
 	}
 
@@ -86,10 +82,10 @@ func NewVote(pollId core.UniqueEntityId, optionId core.UniqueEntityId, voterId c
 	}
 
 	return &Vote{
-		Id:        id,
-		PollId:    pollIdVo,
-		OptionId:  optionIdVo,
-		VoterId:   voterIdVo,
-		CreatedAt: createdAt,
+		AggregateRoot: *core.NewAggregateRoot(id),
+		PollId:        pollIdVo,
+		OptionId:      optionIdVo,
+		VoterId:       voterIdVo,
+		CreatedAt:     createdAt,
 	}, nil
 }

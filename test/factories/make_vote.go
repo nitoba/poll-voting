@@ -40,10 +40,10 @@ func MakeVote(props ...OptionalVoteParams) *entities.Vote {
 	}
 
 	return &entities.Vote{
-		Id:        id,
-		PollId:    pollIdVo,
-		OptionId:  optionIdVo,
-		VoterId:   voterIdVo,
-		CreatedAt: createdAt,
+		AggregateRoot: *core.NewAggregateRoot(id),
+		PollId:        pollIdVo,
+		OptionId:      optionIdVo,
+		VoterId:       voterIdVo,
+		CreatedAt:     createdAt,
 	}
 }

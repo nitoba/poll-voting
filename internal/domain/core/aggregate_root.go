@@ -17,3 +17,14 @@ func (ar *AggregateRoot) AddDomainEvent(event DomainEvent) {
 func (ar *AggregateRoot) ClearEvents() {
 	ar.domainEvents = []DomainEvent{}
 }
+
+func NewAggregateRoot(id ...UniqueEntityId) *AggregateRoot {
+	if len(id) == 0 {
+		id[0] = NewUniqueEntityId()
+	}
+
+	return &AggregateRoot{
+		Entity:       *NewEntity(id[0]),
+		domainEvents: []DomainEvent{},
+	}
+}

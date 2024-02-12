@@ -6,6 +6,7 @@ import (
 
 	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
+	"github.com/nitoba/poll-voting/test/factories"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,33 +18,27 @@ func TestVote_Equals(t *testing.T) {
 
 	t.Run("different objects with same ID are equal", func(t *testing.T) {
 		id := core.NewUniqueEntityId()
-		vote1 := entities.Vote{Id: id}
-		vote2 := entities.Vote{Id: id}
-		assert.True(t, vote1.Equals(&vote2))
+
+		vote1 := factories.MakeVote(factories.OptionalVoteParams{
+			Id: &id,
+		})
+		vote2 := factories.MakeVote(factories.OptionalVoteParams{
+			Id: &id,
+		})
+		assert.True(t, vote1.Equals(vote2))
 	})
 
 	t.Run("different objects with different IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{Id: core.NewUniqueEntityId()}
-		vote2 := entities.Vote{Id: core.NewUniqueEntityId()}
-		assert.False(t, vote1.Equals(&vote2))
-	})
+		id1 := core.NewUniqueEntityId()
+		id2 := core.NewUniqueEntityId()
 
-	t.Run("objects with different poll IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{PollId: core.NewUniqueEntityId()}
-		vote2 := entities.Vote{PollId: core.NewUniqueEntityId()}
-		assert.False(t, vote1.Equals(&vote2))
-	})
-
-	t.Run("objects with different option IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{OptionId: core.NewUniqueEntityId()}
-		vote2 := entities.Vote{OptionId: core.NewUniqueEntityId()}
-		assert.False(t, vote1.Equals(&vote2))
-	})
-
-	t.Run("objects with different voter IDs are not equal", func(t *testing.T) {
-		vote1 := entities.Vote{VoterId: core.NewUniqueEntityId()}
-		vote2 := entities.Vote{VoterId: core.NewUniqueEntityId()}
-		assert.False(t, vote1.Equals(&vote2))
+		vote1 := factories.MakeVote(factories.OptionalVoteParams{
+			Id: &id1,
+		})
+		vote2 := factories.MakeVote(factories.OptionalVoteParams{
+			Id: &id2,
+		})
+		assert.False(t, vote1.Equals(vote2))
 	})
 
 	t.Run("nil objects are not equal", func(t *testing.T) {

@@ -27,10 +27,8 @@ func NewPollOption(title string, id ...core.UniqueEntityId) (*PollOption, error)
 		ID = core.NewUniqueEntityId()
 	}
 	p := &PollOption{
-		Entity: core.Entity{
-			Id: ID,
-		},
-		Title: title,
+		Entity: *core.NewEntity(ID),
+		Title:  title,
 	}
 
 	return p, nil

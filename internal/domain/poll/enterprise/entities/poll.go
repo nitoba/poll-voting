@@ -60,9 +60,7 @@ func NewPoll(title string, options []*PollOption, ownerId core.UniqueEntityId, o
 	}
 
 	p := &Poll{
-		Entity: core.Entity{
-			Id: id,
-		},
+		Entity:    *core.NewEntity(id),
 		Title:     title,
 		Options:   options,
 		OwnerId:   ownerId,

@@ -3,6 +3,7 @@ package repositories_test
 import (
 	"errors"
 
+	"github.com/nitoba/poll-voting/internal/domain/core"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 )
 
@@ -12,6 +13,7 @@ type InMemoryVotesRepository struct {
 
 func (repo *InMemoryVotesRepository) Create(vote *entities.Vote) error {
 	repo.Votes = append(repo.Votes, vote)
+	core.DomainEvents().DispatchEventsForAggregate(vote.Id)
 	return nil
 }
 
