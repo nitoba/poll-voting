@@ -6,6 +6,7 @@ import (
 
 	"github.com/gavv/httpexpect/v2"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/test"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,6 +17,7 @@ type RegisterVoterControllerTestSuite struct {
 
 // Run this function before the all tests
 func (s *RegisterVoterControllerTestSuite) SetupSuite() {
+	test.BeforeAll()
 	server := server.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
 		Client: &http.Client{

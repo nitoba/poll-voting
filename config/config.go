@@ -2,6 +2,9 @@ package configs
 
 import (
 	"context"
+	"path"
+	"path/filepath"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
@@ -12,6 +15,7 @@ var (
 )
 
 type conf struct {
+	ENV string `mapstructure:"ENV"`
 	// DB configuration
 	DATABASE_URL string
 
@@ -30,15 +34,15 @@ type conf struct {
 	Ctx          context.Context
 }
 
-func LoadConfig(path ...string) (*conf, error) {
+func LoadConfig(envPath ...string) (*conf, error) {
 	logger := GetLogger("configs")
 	viper.SetConfigName("app_config")
 	viper.SetConfigType("env")
-	if len(path) == 0 {
-		logger.Warn("Running in test environment...")
-		viper.SetConfigFile(".env")
+	rootDir := rootDir()
+	if len(envPath) == 0 {
+		viper.SetConfigFile(rootDir + "/.env")
 	} else {
-		viper.SetConfigFile(path[0])
+		viper.SetConfigFile(rootDir + "/" + envPath[0])
 	}
 
 	viper.AutomaticEnv()
@@ -56,6 +60,12 @@ func LoadConfig(path ...string) (*conf, error) {
 	}
 	config.Ctx = context.Background()
 	return config, err
+}
+
+func rootDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := path.Join(path.Dir(b))
+	return filepath.Dir(d)
 }
 
 func GetLogger(p string) *Logger {
