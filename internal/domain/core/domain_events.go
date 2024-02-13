@@ -78,9 +78,7 @@ func (e *domainEvents) removeAggregateFromMarkedDispatchList(aggregate interface
 
 func (e *domainEvents) dispatch(event DomainEvent) {
 	eventName := event.Name()
-	isEventRegistered := e.handlers[eventName] != nil
-
-	if isEventRegistered {
+	if _, ok := e.handlers[eventName]; ok {
 		handlers := e.handlers[eventName]
 
 		for _, handler := range handlers {
