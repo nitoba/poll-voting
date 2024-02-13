@@ -20,6 +20,16 @@ func Connect() error {
 	return nil
 }
 
+func Disconnect() {
+	if prisma == nil {
+		return
+	}
+
+	logger := configs.GetLogger("prisma")
+	logger.Info("disconnecting with postgres")
+	prisma.Prisma.Disconnect()
+}
+
 func GetDB() *db.PrismaClient {
 	return prisma
 }

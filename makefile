@@ -1,4 +1,4 @@
-.PHONY: default run build tests docs clean prisma-migrate-dev prisma-generate prisma-studio
+.PHONY: default run build tests docs clean prisma-migrate-dev prisma-generate prisma-deploy
 # Variables
 APP_NAME=poll-voting
 APP_ENTRY_POINT=./cmd/main.go
@@ -12,8 +12,8 @@ prisma-migrate-dev:
 prisma-generate:
 	@go run github.com/steebchen/prisma-client-go generate
 
-prisma-studio:
-	@go run github.com/steebchen/prisma-client-go studio
+prisma-deploy:
+	@go run github.com/steebchen/prisma-client-go migrate deploy
 
 run:
 	@go run $(APP_ENTRY_POINT)

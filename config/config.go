@@ -14,6 +14,13 @@ var (
 type conf struct {
 	// DB configuration
 	DATABASE_URL string
+
+	// Redis configuration
+	RedisHost     string `mapstructure:"REDIS_HOST"`
+	RedisPort     int    `mapstructure:"REDIS_PORT"`
+	RedisPassword string `mapstructure:"REDIS_PASSWORD"`
+	RedisDb       int    `mapstructure:"REDIS_DB"`
+
 	// Web server configuration
 	Port string `mapstructure:"PORT"`
 
