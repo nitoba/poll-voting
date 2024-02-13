@@ -18,7 +18,7 @@ prisma-deploy:
 run:
 	@go run $(APP_ENTRY_POINT)
 run-with-docs:
-	@swag init
+	@swag init -g $(APP_ENTRY_POINT) -o ./docs
 	@go run $(APP_ENTRY_POINT)
 build:
 	@go build -o $(APP_NAME) $(APP_ENTRY_POINT)

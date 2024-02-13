@@ -24,5 +24,8 @@ func GetServer() *gin.Engine {
 	// Register routes
 	routes.AuthRoutes(r)
 
+	// Register docs
+	routes.DocsRoutes(r)
+
 	return r
 }

@@ -8,6 +8,10 @@ import (
 	usecases_errors "github.com/nitoba/poll-voting/internal/domain/poll/application/usecases/errors"
 )
 
+type Error struct {
+	Message string `json:"message"`
+}
+
 type RegisterVoterController struct {
 	registerVoterUseCase *usecases.RegisterVoterUseCase
 }
@@ -18,6 +22,17 @@ type RegisterVoterRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// GetJWT godoc
+// @Summary      Register Voters
+// @Description  Register new voters in the API
+// @Tags         voters
+// @Accept       json
+// @Param        request   body     RegisterVoterRequest  true  "voter credentials"
+// @Produce      json
+// @Success      201
+// @Failure      404  {object} Error
+// @Failure      500  {object} Error
+// @Router       /auth/register [post]
 func (ct *RegisterVoterController) Handle(c *gin.Context) {
 	var reqBody RegisterVoterRequest
 	err := c.ShouldBindJSON(&reqBody)

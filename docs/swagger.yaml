@@ -1,0 +1,68 @@
+basePath: /
+definitions:
+  controllers.Error:
+    properties:
+      message:
+        type: string
+    type: object
+  controllers.RegisterVoterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+host: localhost:3333
+info:
+  contact:
+    email: nito.ba.dev@gmail.com
+    name: Bruno Alves
+    url: https://github.com/nitoba
+  description: A Poll Voting API in Golang
+  license:
+    name: NitoDev
+    url: https://github.com/nitoba
+  termsOfService: https://swagger.io/terms/
+  title: Poll Voting API
+  version: "1.0"
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register new voters in the API
+      parameters:
+      - description: voter credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterVoterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.Error'
+      summary: Register Voters
+      tags:
+      - voters
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
