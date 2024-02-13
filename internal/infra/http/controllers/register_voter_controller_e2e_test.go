@@ -34,7 +34,7 @@ func (s *RegisterVoterControllerTestSuite) SetupSuite() {
 
 // Run this function after the all tests
 func (suite *RegisterVoterControllerTestSuite) TearDownSuite() {
-	println("Run after all tests")
+	test.AfterAll()
 }
 
 // Run this function before every test
@@ -53,13 +53,11 @@ func TestSuit(t *testing.T) {
 }
 
 func (suite *RegisterVoterControllerTestSuite) TestHandle() {
-	suite.Run("should return 200", func() {
-		suite.e.POST("/auth/register").Expect().Status(http.StatusOK).JSON().Object().HasValue("message", "register voter")
-	})
-}
-
-func (suite *RegisterVoterControllerTestSuite) TestHandle2() {
-	suite.Run("should return 404", func() {
-		suite.e.POST("/auth/authenticate").Expect().Status(http.StatusNotFound)
+	suite.Run("should return 204 if voter was created", func() {
+		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
+			"name":     "John Doe",
+			"email":    "john.doe@gmail.com",
+			"password": "123456",
+		}).Expect().Status(http.StatusNoContent)
 	})
 }

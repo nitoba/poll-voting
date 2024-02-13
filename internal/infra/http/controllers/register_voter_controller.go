@@ -1,15 +1,44 @@
 package controllers
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
 
-type RegisterVoterController struct{}
+	"github.com/gin-gonic/gin"
+	"github.com/nitoba/poll-voting/internal/domain/poll/application/usecases"
+)
 
-func (*RegisterVoterController) Handle(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "register voter",
-	})
+type RegisterVoterController struct {
+	registerVoterUseCase *usecases.RegisterVoterUseCase
 }
 
-func NewRegisterVoterController() *RegisterVoterController {
-	return &RegisterVoterController{}
+type RegisterVoterRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+func (ct *RegisterVoterController) Handle(c *gin.Context) {
+	var reqBody RegisterVoterRequest
+	c.Bind(&reqBody)
+
+	err := ct.registerVoterUseCase.Execute(&usecases.RegisterVoterRequest{
+		Name:     reqBody.Name,
+		Email:    reqBody.Email,
+		Password: reqBody.Password,
+	})
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.Status(http.StatusNoContent)
+}
+
+func NewRegisterVoterController(registerVoterUseCase *usecases.RegisterVoterUseCase) *RegisterVoterController {
+	return &RegisterVoterController{
+		registerVoterUseCase: registerVoterUseCase,
+	}
 }

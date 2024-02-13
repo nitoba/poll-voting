@@ -1,7 +1,9 @@
 package prisma
 
 import (
-	"github.com/nitoba/go-api/configs"
+	"os"
+
+	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/prisma/db"
 )
 
@@ -10,8 +12,8 @@ var prisma *db.PrismaClient
 func Connect() error {
 	logger := configs.GetLogger("prisma")
 	logger.Info("connecting with postgres")
-
-	client := db.NewClient()
+	url := os.Getenv("DATABASE_URL")
+	client := db.NewClient(db.WithDatasourceURL(url))
 	if err := client.Prisma.Connect(); err != nil {
 		return err
 	}

@@ -38,7 +38,7 @@ func LoadConfig(envPath ...string) (*conf, error) {
 	logger := GetLogger("configs")
 	viper.SetConfigName("app_config")
 	viper.SetConfigType("env")
-	rootDir := rootDir()
+	rootDir := RootDir()
 	if len(envPath) == 0 {
 		viper.SetConfigFile(rootDir + "/.env")
 	} else {
@@ -62,7 +62,7 @@ func LoadConfig(envPath ...string) (*conf, error) {
 	return config, err
 }
 
-func rootDir() string {
+func RootDir() string {
 	_, b, _, _ := runtime.Caller(0)
 	d := path.Join(path.Dir(b))
 	return filepath.Dir(d)
