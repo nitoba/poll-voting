@@ -23,7 +23,7 @@ func generateUniqueDatabaseURL() string {
 	return strings.Replace(conf.DATABASE_URL, "schema=public", newSchema, 1)
 }
 
-func BeforeAll() {
+func SetupDatabase() {
 	configs.LoadConfig(".env.test")
 	newUrl := generateUniqueDatabaseURL()
 

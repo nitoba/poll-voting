@@ -6,7 +6,9 @@ import (
 
 	"github.com/gavv/httpexpect/v2"
 	configs "github.com/nitoba/poll-voting/config"
+	"github.com/nitoba/poll-voting/internal/infra/database"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
+	http_module "github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/nitoba/poll-voting/test"
@@ -22,7 +24,18 @@ type RegisterVoterControllerTestSuite struct {
 
 // Run this function before the all tests
 func (s *RegisterVoterControllerTestSuite) SetupSuite() {
-	test.BeforeAll()
+	configs.InitContainer()
+
+	databaseModule := database.NewDatabaseModule()
+	httpModule := http_module.NewHttpModule()
+
+	configs.RegisterDependency(databaseModule.GetDependencies()...)
+	configs.RegisterDependency(httpModule.GetDependencies()...)
+
+	configs.BuildDependencies()
+
+	test.SetupDatabase()
+
 	server := server.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
 		Client: &http.Client{
