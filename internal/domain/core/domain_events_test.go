@@ -1,6 +1,7 @@
 package core_test
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -50,8 +51,9 @@ type MockCallBackFunction struct {
 	mock.Mock
 }
 
-func (m *MockCallBackFunction) callbackFunction(event interface{}) {
+func (m *MockCallBackFunction) callbackFunction(event interface{}, wg *sync.WaitGroup) {
 	m.Called(event)
+	wg.Done()
 }
 
 func TestDomainEvents(t *testing.T) {

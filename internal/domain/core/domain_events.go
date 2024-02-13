@@ -2,9 +2,10 @@ package core
 
 import (
 	"slices"
+	"sync"
 )
 
-type DomainEventCallback func(event interface{})
+type DomainEventCallback func(event interface{}, wg *sync.WaitGroup)
 
 type domainEvents struct {
 	handlers         map[string][]DomainEventCallback
@@ -79,11 +80,13 @@ func (e *domainEvents) removeAggregateFromMarkedDispatchList(aggregate interface
 func (e *domainEvents) dispatch(event DomainEvent) {
 	eventName := event.Name()
 	if _, ok := e.handlers[eventName]; ok {
+		wg := &sync.WaitGroup{}
 		handlers := e.handlers[eventName]
-
 		for _, handler := range handlers {
-			handler(event)
+			wg.Add(1)
+			handler(event, wg)
 		}
+		wg.Wait()
 	}
 }
 
