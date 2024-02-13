@@ -11,7 +11,9 @@ import (
 func AuthRoutes(app *gin.Engine) {
 	databaseModule := database.NewDatabaseModule()
 	httpModule := http.NewHttpModule()
+
 	builder, _ := di.NewBuilder()
+
 	builder.Add(databaseModule.PrismaDB)
 	builder.Add(httpModule.Hasher, httpModule.VoterRepository, httpModule.RegisterVoterUseCase, httpModule.RegisterController)
 	ctn := builder.Build()

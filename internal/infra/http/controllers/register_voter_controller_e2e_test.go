@@ -5,8 +5,13 @@ import (
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
+	configs "github.com/nitoba/poll-voting/config"
+	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/nitoba/poll-voting/test"
+	"github.com/nitoba/poll-voting/test/factories"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -38,13 +43,13 @@ func (suite *RegisterVoterControllerTestSuite) TearDownSuite() {
 }
 
 // Run this function before every test
-// func (suite *RegisterVoterControllerTestSuite) SetupTest() {
-
-// }
+func (suite *RegisterVoterControllerTestSuite) SetupTest() {
+	test.TruncateTables()
+}
 
 // Run this function after every test
 // func (suite *RegisterVoterControllerTestSuite) TearDownTest() {
-// 	println("teardown")
+// 	test.TruncateTables()
 // }
 
 func TestSuit(t *testing.T) {
@@ -58,6 +63,36 @@ func (suite *RegisterVoterControllerTestSuite) TestHandle() {
 			"name":     "John Doe",
 			"email":    "john.doe@gmail.com",
 			"password": "123456",
-		}).Expect().Status(http.StatusNoContent)
+		}).Expect().Status(http.StatusCreated)
+
+		voter, _ := prisma.GetDB().Voter.FindUnique(db.Voter.Email.Equals("john.doe@gmail.com")).Exec(configs.GetConfig().Ctx)
+
+		assert.NotEmpty(suite.T(), voter.ID)
+		assert.Equal(suite.T(), "John Doe", voter.Name)
+		assert.Equal(suite.T(), "john.doe@gmail.com", voter.Email)
+	})
+}
+
+func (suite *RegisterVoterControllerTestSuite) TestHandleInvalidData() {
+	suite.Run("should return 400 if the data if not valid", func() {
+		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
+			"name":     "",
+			"email":    "john.doe@gmail.com",
+			"password": "123456",
+		}).Expect().Status(http.StatusBadRequest).JSON().Object().ContainsKey("message")
+	})
+}
+
+func (suite *RegisterVoterControllerTestSuite) TestHandleVoterAlreadyExists() {
+	suite.Run("should return 409 if the voter already exists", func() {
+		factories.MakePrismaVoter(factories.OptionalVoterParams{
+			Email: "john.doe@gmail.com",
+		})
+
+		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
+			"name":     "John Doe",
+			"email":    "john.doe@gmail.com",
+			"password": "123456",
+		}).Expect().Status(http.StatusConflict).JSON().Object().HasValue("message", "voter already exists")
 	})
 }

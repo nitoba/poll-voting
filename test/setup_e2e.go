@@ -42,6 +42,14 @@ func BeforeAll() {
 	prisma.Connect()
 }
 
+func TruncateTables() {
+	dba := prisma.GetDB()
+	query := `TRUNCATE TABLE "schema".voters, "schema".polls, "schema".poll_options, "schema".votes CASCADE`
+	query = strings.ReplaceAll(query, "schema", newSchemaID)
+	println("Truncating tables: ", query)
+	dba.Prisma.ExecuteRaw(query).Exec(configs.GetConfig().Ctx)
+}
+
 func AfterAll() {
 	conf := configs.GetConfig()
 	dba := prisma.GetDB()
