@@ -43,11 +43,11 @@ func SetupDatabase() {
 }
 
 func TruncateTables() {
-	dba := prisma.GetDB()
+	database := prisma.GetDB()
 	query := `TRUNCATE TABLE "schema".voters, "schema".polls, "schema".poll_options, "schema".votes CASCADE`
 	query = strings.ReplaceAll(query, "schema", newSchemaID)
 	println("Truncating tables: ", query)
-	dba.Prisma.ExecuteRaw(query).Exec(configs.GetConfig().Ctx)
+	database.Prisma.ExecuteRaw(query).Exec(configs.GetConfig().Ctx)
 }
 
 func AfterAll() {
