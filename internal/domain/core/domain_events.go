@@ -84,7 +84,7 @@ func (e *domainEvents) dispatch(event DomainEvent) {
 		handlers := e.handlers[eventName]
 		for _, handler := range handlers {
 			wg.Add(1)
-			handler(event, wg)
+			go handler(event, wg)
 		}
 		wg.Wait()
 	}
