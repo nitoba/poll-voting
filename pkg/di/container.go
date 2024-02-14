@@ -20,7 +20,7 @@ func BuildDependencies() {
 	ctn = builder.Build()
 }
 
-func RegisterModuleProviders(dependencies ...module.Provider) {
+func RegisterModuleProviders(dependencies module.Providers) {
 	dependency := []di.Def{}
 
 	for _, dep := range dependencies {

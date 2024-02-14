@@ -6,28 +6,22 @@ import (
 )
 
 type DatabaseModule struct {
-	Imports   []module.Module
-	Providers []module.Provider
-}
-
-func (m *DatabaseModule) Build() {
-	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
-}
-
-func (m *DatabaseModule) GetDependencies() []module.Provider {
-	return m.Providers
+	module.Module
 }
 
 func NewDatabaseModule() *DatabaseModule {
 	m := &DatabaseModule{
-		Providers: []module.Provider{
-			{
-				Name: "db",
-				Provide: func(ctn module.Container) (interface{}, error) {
-					return prisma.GetDB(), nil
+		Module: module.Module{
+			Providers: module.Providers{
+				{
+					Name: "db",
+					Provide: func(ctn module.Container) (interface{}, error) {
+						return prisma.GetDB(), nil
+					},
 				},
 			},
 		},
 	}
+	m.Build()
 	return m
 }

@@ -33,15 +33,14 @@ func main() {
 	prisma.Connect()
 	di.InitContainer()
 
-	app := infra.NewAppModule(module.NewModule{
-		Imports: []module.Module{
+	app := infra.NewAppModule(module.Module{
+		Imports: module.Imports{
 			database.NewDatabaseModule(),
 			http.NewHttpModule(),
 		},
-		Providers: []module.Provider{},
 	})
 
-	di.RegisterModuleProviders(app.Providers...)
+	di.RegisterModuleProviders(app.Providers)
 
 	di.BuildDependencies()
 

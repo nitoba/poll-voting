@@ -8,52 +8,40 @@ import (
 )
 
 type FooModule struct {
-	Imports   []module.Module
-	Providers []module.Provider
-}
-
-func (m *FooModule) Build() {
-	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
-}
-
-func (m *FooModule) GetDependencies() []module.Provider {
-	return m.Providers
+	module.Module
 }
 
 func NewFooModule() *FooModule {
 	m := &FooModule{
-		Providers: []module.Provider{
-			{
-				Name: "foo",
-				Provide: func(ctn module.Container) (interface{}, error) {
-					return "foo", nil
+		Module: module.Module{
+			Providers: module.Providers{
+				{
+					Name: "foo",
+					Provide: func(ctn module.Container) (interface{}, error) {
+						return "foo", nil
+					},
 				},
 			},
 		},
 	}
+	m.Build()
 	return m
 }
 
 type BarModule struct {
-	Imports   []module.Module
-	Providers []module.Provider
-}
-
-func (m *BarModule) Build() {
-	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
-}
-
-func (m *BarModule) GetDependencies() []module.Provider {
-	return m.Providers
+	module.Module
 }
 
 func NewBarModule() *BarModule {
 	m := &BarModule{
-		Providers: []module.Provider{
-			{
-				Name: "far",
-				Provide: func(ctn module.Container) (interface{}, error) {
-					return "far", nil
+		Module: module.Module{
+			Imports: module.Imports{},
+			Providers: module.Providers{
+				{
+					Name: "bar",
+					Provide: func(ctn module.Container) (interface{}, error) {
+						return "bar", nil
+					},
 				},
 			},
 		},
@@ -63,19 +51,11 @@ func NewBarModule() *BarModule {
 }
 
 type AppModule struct {
-	Imports   []module.Module
-	Providers []module.Provider
+	module.Module
 }
 
-func (m *AppModule) Build() {
-	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
-}
-
-func NewAppModule(options module.NewModule) *AppModule {
-	m := &AppModule{
-		Imports:   options.Imports,
-		Providers: options.Providers,
-	}
+func NewAppModule(module module.Module) *AppModule {
+	m := &AppModule{module}
 	m.Build()
 	return m
 }
@@ -88,25 +68,29 @@ func TestModule_Build(t *testing.T) {
 		assert.Len(t, fooModule.Providers, 1)
 	})
 	t.Run("should build all modules", func(t *testing.T) {
-		appModule := NewAppModule(module.NewModule{
-			Imports:   []module.Module{NewBarModule(), NewFooModule()},
-			Providers: []module.Provider{},
+		appModule := NewAppModule(module.Module{
+			Imports:   module.Imports{NewBarModule(), NewFooModule()},
+			Providers: module.Providers{},
 		})
 		assert.Len(t, appModule.Providers, 2)
 	})
 
 	t.Run("should build all modules and resolve repeated providers", func(t *testing.T) {
-		appModule := NewAppModule(module.NewModule{
-			Imports: []module.Module{NewBarModule(), NewFooModule()},
-			Providers: []module.Provider{
+		barModule := NewBarModule()
+		fooModule := NewFooModule()
+		appModule := NewAppModule(module.Module{
+			Imports: module.Imports{barModule, fooModule},
+			Providers: module.Providers{
 				{
-					Name: "far",
+					Name: "bar",
 					Provide: func(ctn module.Container) (interface{}, error) {
-						return "far", nil
+						return "bar", nil
 					},
 				},
 			},
 		})
 		assert.Len(t, appModule.Providers, 2)
+		assert.Len(t, barModule.Providers, 1)
+		assert.Len(t, fooModule.Providers, 1)
 	})
 }

@@ -11,20 +11,11 @@ import (
 )
 
 type HttpModule struct {
-	Imports   []module.Module
-	Providers []module.Provider
-}
-
-func (m *HttpModule) Build() {
-	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
-}
-
-func (m *HttpModule) GetDependencies() []module.Provider {
-	return m.Providers
+	module.Module
 }
 
 func NewHttpModule() *HttpModule {
-	deps := []module.Provider{
+	providers := module.Providers{
 		{
 			Name: "hasher",
 			Provide: func(ctn module.Container) (interface{}, error) {
@@ -52,11 +43,15 @@ func NewHttpModule() *HttpModule {
 	}
 
 	m := &HttpModule{
-		Imports: []module.Module{
-			database.NewDatabaseModule(),
+		Module: module.Module{
+			Imports: module.Imports{
+				database.NewDatabaseModule(),
+			},
+			Providers: providers,
 		},
-		Providers: deps,
 	}
+
+	m.Build()
 
 	return m
 }

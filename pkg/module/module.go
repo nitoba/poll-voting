@@ -6,36 +6,47 @@ type Container interface {
 	Get(name string) interface{}
 }
 
-type Module interface {
-	GetDependencies() []Provider
+type module interface {
+	GetDependencies() Providers
 	Build()
 }
 
-type Provider struct {
+type provider struct {
 	Name    string
 	Provide func(ctn Container) (interface{}, error)
 }
 
-type NewModule struct {
-	Imports   []Module
-	Providers []Provider
+type Imports []module
+type Providers []provider
+
+type Module struct {
+	Imports   Imports
+	Providers Providers
 }
 
-func RevolveProvidersFromImports(imports []Module, incomingProviders []Provider) []Provider {
-	var providers []Provider = incomingProviders
-	for _, i := range imports {
-		i.Build()
+func (m *Module) Build() {
+	m.revolveProvidersFromImports()
+}
+
+func (m *Module) GetDependencies() Providers {
+	return m.Providers
+}
+
+func (m *Module) revolveProvidersFromImports() {
+	for _, i := range m.Imports {
 		importDeps := i.GetDependencies()
+		if len(importDeps) == 0 {
+			i.Build()
+		}
 
 		for _, dep := range importDeps {
-			alreadyInProviders := slices.ContainsFunc(providers, func(p Provider) bool {
+			alreadyInProviders := slices.ContainsFunc(m.Providers, func(p provider) bool {
 				return p.Name == dep.Name
 			})
 
 			if !alreadyInProviders {
-				providers = append(providers, dep)
+				m.Providers = append(m.Providers, dep)
 			}
 		}
 	}
-	return providers
 }
