@@ -1,5 +1,20 @@
 basePath: /
 definitions:
+  controllers.AuthenticateVoterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controllers.AuthenticateVoterResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
   controllers.Error:
     properties:
       message:
@@ -32,6 +47,36 @@ info:
   title: Poll Voting API
   version: "1.0"
 paths:
+  /auth/authenticate:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate voters in the API
+      parameters:
+      - description: voter credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AuthenticateVoterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.AuthenticateVoterResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.Error'
+      summary: Authenticate Voters
+      tags:
+      - voters
   /auth/register:
     post:
       consumes:

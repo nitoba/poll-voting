@@ -23,6 +23,12 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "encrypter",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return infra_cryptography.NewJWTEncrypter(), nil
+			},
+		},
+		{
 			Name: "voterRepository",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return infra_repositories.NewVotersRepositoryPrisma(ctn.Get("db").(*db.PrismaClient)), nil
@@ -38,9 +44,25 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "authenticateVoterUseCase",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return usecases.NewAuthenticateUseCase(
+					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
+					ctn.Get("hasher").(*infra_cryptography.BCryptHasher),
+					ctn.Get("encrypter").(*infra_cryptography.JWTEncrypter),
+				), nil
+			},
+		},
+		{
 			Name: "registerController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewRegisterVoterController(ctn.Get("registerVoterUseCase").(*usecases.RegisterVoterUseCase)), nil
+			},
+		},
+		{
+			Name: "authenticateController",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return controllers.NewAuthenticateVoterController(ctn.Get("authenticateVoterUseCase").(*usecases.AuthenticateUseCase)), nil
 			},
 		},
 	}
