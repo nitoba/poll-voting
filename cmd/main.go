@@ -2,10 +2,13 @@ package main
 
 import (
 	configs "github.com/nitoba/poll-voting/config"
+	"github.com/nitoba/poll-voting/internal/infra"
 	"github.com/nitoba/poll-voting/internal/infra/database"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/pkg/di"
+	"github.com/nitoba/poll-voting/pkg/module"
 )
 
 // @title           Poll Voting API
@@ -28,16 +31,19 @@ import (
 func main() {
 	configs.LoadConfig()
 	prisma.Connect()
+	di.InitContainer()
 
-	configs.InitContainer()
+	app := infra.NewAppModule(module.NewModule{
+		Imports: []module.Module{
+			database.NewDatabaseModule(),
+			http.NewHttpModule(),
+		},
+		Providers: []module.Provider{},
+	})
 
-	databaseModule := database.NewDatabaseModule()
-	httpModule := http.NewHttpModule()
+	di.RegisterModuleProviders(app.Providers...)
 
-	configs.RegisterDependency(databaseModule.GetDependencies()...)
-	configs.RegisterDependency(httpModule.GetDependencies()...)
-
-	configs.BuildDependencies()
+	di.BuildDependencies()
 
 	server := server.GetServer()
 

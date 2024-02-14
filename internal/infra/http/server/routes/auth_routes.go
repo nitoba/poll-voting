@@ -2,12 +2,12 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
+	"github.com/nitoba/poll-voting/pkg/di"
 )
 
 func AuthRoutes(app *gin.Engine) {
-	ctn := configs.GetContainer()
+	ctn := di.GetContainer()
 	registerController := ctn.Get("registerController").(*controllers.RegisterVoterController)
 
 	router := app.Group("/auth")

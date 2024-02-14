@@ -1,18 +1,17 @@
-package database
+package infra
 
 import (
 	"slices"
 
-	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/pkg/module"
 )
 
-type DatabaseModule struct {
+type AppModule struct {
 	Imports   []module.Module
 	Providers []module.Provider
 }
 
-func (m *DatabaseModule) Build() {
+func (m *AppModule) Build() {
 	for _, i := range m.Imports {
 		i.Build()
 		importDeps := i.GetDependencies()
@@ -30,20 +29,13 @@ func (m *DatabaseModule) Build() {
 	}
 }
 
-func (m *DatabaseModule) GetDependencies() []module.Provider {
-	return m.Providers
-}
-
-func NewDatabaseModule() *DatabaseModule {
-	m := &DatabaseModule{
-		Providers: []module.Provider{
-			{
-				Name: "db",
-				Provide: func(ctn module.Container) (interface{}, error) {
-					return prisma.GetDB(), nil
-				},
-			},
-		},
+func NewAppModule(options module.NewModule) *AppModule {
+	m := &AppModule{
+		Imports:   options.Imports,
+		Providers: options.Providers,
 	}
+
+	m.Build()
+
 	return m
 }
