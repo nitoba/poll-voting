@@ -31,7 +31,10 @@ func NewHttpModule() *HttpModule {
 		{
 			Name: "registerVoterUseCase",
 			Provide: func(ctn module.Container) (interface{}, error) {
-				return usecases.NewRegisterVoterUseCase(ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma), ctn.Get("hasher").(*infra_cryptography.BCryptHasher)), nil
+				return usecases.NewRegisterVoterUseCase(
+					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
+					ctn.Get("hasher").(*infra_cryptography.BCryptHasher),
+				), nil
 			},
 		},
 		{
