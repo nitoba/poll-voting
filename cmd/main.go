@@ -3,12 +3,9 @@ package main
 import (
 	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/infra"
-	"github.com/nitoba/poll-voting/internal/infra/database"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
-	"github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
 	"github.com/nitoba/poll-voting/pkg/di"
-	"github.com/nitoba/poll-voting/pkg/module"
 )
 
 // @title           Poll Voting API
@@ -33,12 +30,7 @@ func main() {
 	prisma.Connect()
 	di.InitContainer()
 
-	app := infra.NewAppModule(module.Module{
-		Imports: module.Imports{
-			database.NewDatabaseModule(),
-			http.NewHttpModule(),
-		},
-	})
+	app := infra.NewAppModule()
 
 	di.RegisterModuleProviders(app.Providers)
 
