@@ -30,7 +30,7 @@ func (s *RegisterVoterControllerTestSuite) SetupSuite() {
 
 	httpModule.Build()
 
-	di.RegisterModuleProviders(httpModule.GetDependencies())
+	di.RegisterModuleProviders(httpModule.GetProviders())
 
 	di.BuildDependencies()
 

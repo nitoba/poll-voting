@@ -7,7 +7,7 @@ type Container interface {
 }
 
 type module interface {
-	GetDependencies() Providers
+	GetProviders() Providers
 	Build()
 }
 
@@ -28,13 +28,13 @@ func (m *Module) Build() {
 	m.revolveProvidersFromImports()
 }
 
-func (m *Module) GetDependencies() Providers {
+func (m *Module) GetProviders() Providers {
 	return m.Providers
 }
 
 func (m *Module) revolveProvidersFromImports() {
 	for _, i := range m.Imports {
-		importDeps := i.GetDependencies()
+		importDeps := i.GetProviders()
 		if len(importDeps) == 0 {
 			i.Build()
 		}
