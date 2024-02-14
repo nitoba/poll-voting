@@ -20,12 +20,22 @@ func BuildDependencies() {
 	ctn = builder.Build()
 }
 
+func wrapContainerFunc(p module.Provide) func(di.Container) (interface{}, error) {
+	return func(ctn di.Container) (interface{}, error) {
+		t, err := p(ctn)
+		if err != nil {
+			return nil, err
+		}
+		return t, nil
+	}
+}
+
 func RegisterModuleProviders(providers module.Providers) {
 	for _, dep := range providers {
 		builder.Add(di.Def{
 			Unshared: !dep.IsSingleton,
 			Name:     dep.Name,
-			Build:    dep.Provide,
+			Build:    wrapContainerFunc(dep.Provide),
 		})
 	}
 }

@@ -2,9 +2,13 @@ package module
 
 import (
 	"slices"
-
-	"github.com/sarulabs/di/v2"
 )
+
+type Container interface {
+	Get(name string) interface{}
+}
+
+type Provide func(ctn Container) (interface{}, error)
 
 type module interface {
 	GetProviders() Providers
@@ -14,7 +18,7 @@ type module interface {
 type provider struct {
 	Name        string
 	IsSingleton bool
-	Provide     func(ctn di.Container) (interface{}, error)
+	Provide     Provide
 }
 
 type Imports []module

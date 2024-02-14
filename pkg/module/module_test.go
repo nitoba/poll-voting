@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nitoba/poll-voting/pkg/module"
-	"github.com/sarulabs/di/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,7 +17,7 @@ func NewFooModule() *FooModule {
 			Providers: module.Providers{
 				{
 					Name: "foo",
-					Provide: func(ctn di.Container) (interface{}, error) {
+					Provide: func(ctn module.Container) (interface{}, error) {
 						return "foo", nil
 					},
 				},
@@ -40,7 +39,7 @@ func NewBarModule() *BarModule {
 			Providers: module.Providers{
 				{
 					Name: "bar",
-					Provide: func(ctn di.Container) (interface{}, error) {
+					Provide: func(ctn module.Container) (interface{}, error) {
 						return "bar", nil
 					},
 				},
@@ -89,7 +88,7 @@ func TestModule_Build(t *testing.T) {
 			Providers: module.Providers{
 				{
 					Name: "bar",
-					Provide: func(ctn di.Container) (interface{}, error) {
+					Provide: func(ctn module.Container) (interface{}, error) {
 						return "bar", nil
 					},
 				},
