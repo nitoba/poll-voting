@@ -9,8 +9,11 @@ var ctn di.Container
 var builder *di.Builder
 
 func InitContainer() {
-	b, _ := di.NewBuilder()
-	builder = b
+	if b, err := di.NewBuilder(); err != nil {
+		panic(err)
+	} else {
+		builder = b
+	}
 }
 
 func BuildDependencies() {
