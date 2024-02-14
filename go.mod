@@ -9,7 +9,6 @@ require (
 	github.com/jaswdr/faker v1.19.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.0.19
-	github.com/nitoba/go-api v0.0.0-20240209185042-135270569821
 	github.com/sarulabs/di v2.0.0+incompatible
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.18.2
