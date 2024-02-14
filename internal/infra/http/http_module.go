@@ -1,8 +1,6 @@
 package http
 
 import (
-	"slices"
-
 	"github.com/nitoba/poll-voting/internal/domain/poll/application/usecases"
 	infra_cryptography "github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database"
@@ -18,21 +16,7 @@ type HttpModule struct {
 }
 
 func (m *HttpModule) Build() {
-	for _, i := range m.Imports {
-		i.Build()
-		importDeps := i.GetDependencies()
-
-		for _, dep := range importDeps {
-			alreadyInProviders := slices.ContainsFunc(m.Providers, func(p module.Provider) bool {
-				return p.Name == dep.Name
-				// return reflect.TypeOf(dep.Provide).String() == reflect.TypeOf(p.Provide).String()
-			})
-
-			if !alreadyInProviders {
-				m.Providers = append(m.Providers, dep)
-			}
-		}
-	}
+	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
 }
 
 func (m *HttpModule) GetDependencies() []module.Provider {

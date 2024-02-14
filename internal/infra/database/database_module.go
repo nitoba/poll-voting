@@ -1,8 +1,6 @@
 package database
 
 import (
-	"slices"
-
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/pkg/module"
 )
@@ -13,21 +11,7 @@ type DatabaseModule struct {
 }
 
 func (m *DatabaseModule) Build() {
-	for _, i := range m.Imports {
-		i.Build()
-		importDeps := i.GetDependencies()
-
-		for _, dep := range importDeps {
-			alreadyInProviders := slices.ContainsFunc(m.Providers, func(p module.Provider) bool {
-				return p.Name == dep.Name
-				// return reflect.TypeOf(dep.Provide).String() == reflect.TypeOf(p.Provide).String()
-			})
-
-			if !alreadyInProviders {
-				m.Providers = append(m.Providers, dep)
-			}
-		}
-	}
+	m.Providers = module.RevolveProvidersFromImports(m.Imports, m.Providers)
 }
 
 func (m *DatabaseModule) GetDependencies() []module.Provider {
