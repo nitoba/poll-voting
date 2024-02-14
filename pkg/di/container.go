@@ -2,7 +2,7 @@ package di
 
 import (
 	"github.com/nitoba/poll-voting/pkg/module"
-	"github.com/sarulabs/di"
+	"github.com/sarulabs/di/v2"
 )
 
 var ctn di.Container
@@ -20,20 +20,14 @@ func BuildDependencies() {
 	ctn = builder.Build()
 }
 
-func RegisterModuleProviders(dependencies module.Providers) {
-	dependency := []di.Def{}
-
-	for _, dep := range dependencies {
-		dependency = append(dependency, di.Def{
-			Name:  dep.Name,
-			Scope: di.App,
-			Build: func(ctn di.Container) (interface{}, error) {
-				return dep.Provide(ctn)
-			},
+func RegisterModuleProviders(providers module.Providers) {
+	for _, dep := range providers {
+		builder.Add(di.Def{
+			Unshared: !dep.IsSingleton,
+			Name:     dep.Name,
+			Build:    dep.Provide,
 		})
 	}
-
-	builder.Add(dependency...)
 }
 
 func GetContainer() di.Container {

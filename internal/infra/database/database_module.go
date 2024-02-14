@@ -3,6 +3,7 @@ package database
 import (
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/pkg/module"
+	"github.com/sarulabs/di/v2"
 )
 
 type DatabaseModule struct {
@@ -15,7 +16,7 @@ func NewDatabaseModule() *DatabaseModule {
 			Providers: module.Providers{
 				{
 					Name: "db",
-					Provide: func(ctn module.Container) (interface{}, error) {
+					Provide: func(ctn di.Container) (interface{}, error) {
 						return prisma.GetDB(), nil
 					},
 				},

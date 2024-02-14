@@ -9,7 +9,7 @@ require (
 	github.com/jaswdr/faker v1.19.1
 	github.com/joho/godotenv v1.5.1
 	github.com/lestrrat-go/jwx/v2 v2.0.19
-	github.com/sarulabs/di v2.0.0+incompatible
+	github.com/sarulabs/di/v2 v2.4.2
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.18.2
 	github.com/steebchen/prisma-client-go v0.33.0

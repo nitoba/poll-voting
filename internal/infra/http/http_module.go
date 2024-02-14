@@ -8,6 +8,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
 	"github.com/nitoba/poll-voting/pkg/module"
 	"github.com/nitoba/poll-voting/prisma/db"
+	"github.com/sarulabs/di/v2"
 )
 
 type HttpModule struct {
@@ -18,19 +19,19 @@ func NewHttpModule() *HttpModule {
 	providers := module.Providers{
 		{
 			Name: "hasher",
-			Provide: func(ctn module.Container) (interface{}, error) {
+			Provide: func(ctn di.Container) (interface{}, error) {
 				return infra_cryptography.CreateBCryptHasher(), nil
 			},
 		},
 		{
 			Name: "voterRepository",
-			Provide: func(ctn module.Container) (interface{}, error) {
+			Provide: func(ctn di.Container) (interface{}, error) {
 				return infra_repositories.NewVotersRepositoryPrisma(ctn.Get("db").(*db.PrismaClient)), nil
 			},
 		},
 		{
 			Name: "registerVoterUseCase",
-			Provide: func(ctn module.Container) (interface{}, error) {
+			Provide: func(ctn di.Container) (interface{}, error) {
 				return usecases.NewRegisterVoterUseCase(
 					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
 					ctn.Get("hasher").(*infra_cryptography.BCryptHasher),
@@ -39,7 +40,7 @@ func NewHttpModule() *HttpModule {
 		},
 		{
 			Name: "registerController",
-			Provide: func(ctn module.Container) (interface{}, error) {
+			Provide: func(ctn di.Container) (interface{}, error) {
 				return controllers.NewRegisterVoterController(ctn.Get("registerVoterUseCase").(*usecases.RegisterVoterUseCase)), nil
 			},
 		},

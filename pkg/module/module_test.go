@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/nitoba/poll-voting/pkg/module"
+	"github.com/sarulabs/di/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,7 +18,7 @@ func NewFooModule() *FooModule {
 			Providers: module.Providers{
 				{
 					Name: "foo",
-					Provide: func(ctn module.Container) (interface{}, error) {
+					Provide: func(ctn di.Container) (interface{}, error) {
 						return "foo", nil
 					},
 				},
@@ -39,7 +40,7 @@ func NewBarModule() *BarModule {
 			Providers: module.Providers{
 				{
 					Name: "bar",
-					Provide: func(ctn module.Container) (interface{}, error) {
+					Provide: func(ctn di.Container) (interface{}, error) {
 						return "bar", nil
 					},
 				},
@@ -69,10 +70,15 @@ func TestModule_Build(t *testing.T) {
 	})
 	t.Run("should build all modules", func(t *testing.T) {
 		appModule := NewAppModule(module.Module{
-			Imports:   module.Imports{NewBarModule(), NewFooModule()},
-			Providers: module.Providers{},
+			Imports: module.Imports{NewBarModule(), NewFooModule()},
 		})
+		p1, _ := appModule.Providers[0].Provide(nil)
+		p2, _ := appModule.Providers[1].Provide(nil)
 		assert.Len(t, appModule.Providers, 2)
+		assert.Equal(t, "bar", appModule.Providers[0].Name)
+		assert.Equal(t, "foo", appModule.Providers[1].Name)
+		assert.Equal(t, "bar", p1)
+		assert.Equal(t, "foo", p2)
 	})
 
 	t.Run("should build all modules and resolve repeated providers", func(t *testing.T) {
@@ -83,7 +89,7 @@ func TestModule_Build(t *testing.T) {
 			Providers: module.Providers{
 				{
 					Name: "bar",
-					Provide: func(ctn module.Container) (interface{}, error) {
+					Provide: func(ctn di.Container) (interface{}, error) {
 						return "bar", nil
 					},
 				},
@@ -92,5 +98,7 @@ func TestModule_Build(t *testing.T) {
 		assert.Len(t, appModule.Providers, 2)
 		assert.Len(t, barModule.Providers, 1)
 		assert.Len(t, fooModule.Providers, 1)
+		assert.Equal(t, "bar", appModule.Providers[0].Name)
+		assert.Equal(t, "foo", appModule.Providers[1].Name)
 	})
 }
