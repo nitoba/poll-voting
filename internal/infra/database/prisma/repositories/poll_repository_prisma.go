@@ -14,26 +14,23 @@ type PollsRepositoryPrisma struct {
 func (r *PollsRepositoryPrisma) Create(poll *entities.Poll) error {
 	ctx := configs.GetConfig().Ctx
 
-	pollCreated, err := r.db.Poll.CreateOne(
+	pollTx := r.db.Poll.CreateOne(
 		db.Poll.Title.Set(poll.Title),
 		db.Poll.Owner.Link(db.Voter.ID.Equals(poll.OwnerId.String())),
 		db.Poll.ID.Set(poll.Id.String()),
-	).Exec(ctx)
+	).Tx()
 
-	if err != nil {
+	if err := r.db.Prisma.Transaction(pollTx).Exec(ctx); err != nil {
 		return err
 	}
 
 	for _, option := range poll.Options {
-		_, err = r.db.PollOption.CreateOne(
+		tx := r.db.PollOption.CreateOne(
 			db.PollOption.Title.Set(option.Title),
-			db.PollOption.Poll.Link(
-				db.Poll.ID.Equals(pollCreated.ID),
-			),
-			db.PollOption.ID.Set(option.Id.String()),
-		).Exec(ctx)
+			db.PollOption.Poll.Link(db.Poll.ID.Equals(poll.Id.String())),
+		).Tx()
 
-		if err != nil {
+		if err := r.db.Prisma.Transaction(tx).Exec(ctx); err != nil {
 			return err
 		}
 	}

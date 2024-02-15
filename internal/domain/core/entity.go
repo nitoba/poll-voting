@@ -10,8 +10,6 @@ func NewEntity(id ...UniqueEntityId) *Entity {
 		id = append(id, NewUniqueEntityId())
 	}
 
-	println("Tamanho de id: ", len(id))
-
 	return &Entity{
 		Id: id[0],
 	}
