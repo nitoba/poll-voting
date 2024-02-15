@@ -27,7 +27,10 @@ import (
 // @name Authorization
 func main() {
 	configs.LoadConfig()
+
 	prisma.Connect()
+	defer prisma.Disconnect()
+
 	di.InitContainer()
 
 	app := infra.NewAppModule()
