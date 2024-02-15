@@ -23,6 +23,7 @@ func GetServer() *gin.Engine {
 
 	// Register routes
 	routes.AuthRoutes(r)
+	routes.PollRoutes(r)
 
 	// Register docs
 	routes.DocsRoutes(r)
