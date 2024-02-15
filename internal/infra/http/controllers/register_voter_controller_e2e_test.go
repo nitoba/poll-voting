@@ -65,7 +65,7 @@ func (suite *RegisterVoterControllerTestSuite) SetupTest() {
 // 	test.TruncateTables()
 // }
 
-func TestSuit(t *testing.T) {
+func TestRegisterVoterControllerSuite(t *testing.T) {
 	// Register the test suite
 	suite.Run(t, new(RegisterVoterControllerTestSuite))
 }
