@@ -29,7 +29,7 @@ type AuthenticateVoterResponse struct {
 // @Param        request   body     AuthenticateVoterRequest  true  "voter credentials"
 // @Produce      json
 // @Success      201  {object} AuthenticateVoterResponse
-// @Failure      404  {object} Error
+// @Failure      400  {object} Error
 // @Failure      500  {object} Error
 // @Router       /auth/authenticate [post]
 func (ct *AuthenticateVoterController) Handle(c *gin.Context) {

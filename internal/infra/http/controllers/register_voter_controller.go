@@ -30,7 +30,7 @@ type RegisterVoterRequest struct {
 // @Param        request   body     RegisterVoterRequest  true  "voter credentials"
 // @Produce      json
 // @Success      201
-// @Failure      404  {object} Error
+// @Failure      400  {object} Error
 // @Failure      500  {object} Error
 // @Router       /auth/register [post]
 func (ct *RegisterVoterController) Handle(c *gin.Context) {

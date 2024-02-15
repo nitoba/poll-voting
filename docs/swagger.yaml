@@ -15,6 +15,21 @@ definitions:
       access_token:
         type: string
     type: object
+  controllers.CreatePollRequest:
+    properties:
+      options:
+        items:
+          type: string
+        minItems: 2
+        type: array
+      title:
+        maxLength: 100
+        minLength: 5
+        type: string
+    required:
+    - options
+    - title
+    type: object
   controllers.Error:
     properties:
       message:
@@ -105,6 +120,36 @@ paths:
       summary: Register Voters
       tags:
       - voters
+  /polls:
+    post:
+      consumes:
+      - application/json
+      description: Create polls in the API
+      parameters:
+      - description: poll data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreatePollRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Polls
+      tags:
+      - polls
 securityDefinitions:
   ApiKeyAuth:
     in: header

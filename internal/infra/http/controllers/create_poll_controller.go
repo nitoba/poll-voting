@@ -24,7 +24,7 @@ type CreatePollRequest struct {
 // @Param        request   body     CreatePollRequest  true  "poll data"
 // @Produce      json
 // @Success      201
-// @Failure      404  {object} Error
+// @Failure      400  {object} Error
 // @Failure      500  {object} Error
 // @Router       /polls [post]
 // @Security ApiKeyAuth
