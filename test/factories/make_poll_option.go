@@ -8,7 +8,7 @@ import (
 
 type OptionalPollOptionParams struct {
 	Id    *core.UniqueEntityId
-	Title *string
+	Title string
 }
 
 func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
@@ -19,8 +19,8 @@ func MakePoolOption(props ...OptionalPollOptionParams) *entities.PollOption {
 		id = core.NewUniqueEntityId(props[0].Id.String())
 	}
 
-	if len(props) > 0 && props[0].Title != nil {
-		title = *props[0].Title
+	if len(props) > 0 && props[0].Title != "" {
+		title = props[0].Title
 	}
 
 	return &entities.PollOption{
