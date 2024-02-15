@@ -23,9 +23,6 @@ type VoteOnPollControllerTestSuite struct {
 	suite.Suite
 	e          *httpexpect.Expect
 	httpModule *http_module.HttpModule
-	token      string
-	optionId   string
-	pollId     string
 }
 
 // Run this function before the all tests
