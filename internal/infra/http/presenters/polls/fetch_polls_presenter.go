@@ -3,6 +3,7 @@ package polls_presenter
 import "github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 
 type FetchPollsResponse struct {
+	Id      string   `json:"id"`
 	Title   string   `json:"title"`
 	Options []string `json:"options"`
 }
@@ -16,6 +17,7 @@ func PollsToHttp(polls []*entities.Poll) []FetchPollsResponse {
 		}
 
 		pollsToResponse = append(pollsToResponse, FetchPollsResponse{
+			Id:      p.Id.String(),
 			Title:   p.Title,
 			Options: options,
 		})
