@@ -11,13 +11,15 @@ import (
 
 func PollRoutes(app *gin.Engine) {
 	ctn := di.GetContainer()
-	createPollController := ctn.Get("createPollController").(*controllers.CreatePollController)
 	jwtEncrypter := ctn.Get("encrypter").(*cryptography.JWTEncrypter)
 	voterRepository := ctn.Get("voterRepository").(*repositories.VotersRepositoryPrisma)
+	createPollController := ctn.Get("createPollController").(*controllers.CreatePollController)
+	fetchPollsController := ctn.Get("fetchPollsController").(*controllers.FetchPollsController)
 
 	router := app.Group("/polls")
 	router.Use(middlewares.AuthRequired(jwtEncrypter, voterRepository))
 	{
+		router.GET("/", fetchPollsController.Handle)
 		router.POST("/", createPollController.Handle)
 	}
 }
