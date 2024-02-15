@@ -52,7 +52,7 @@ model PollOption {
 
 model Votes {
     id           String   @id @default(uuid())
-    voteId       String
+    voterId      String
     pollId       String
     pollOptionId String
     createdAt    DateTime @default(now()) @map("created_at")
@@ -60,8 +60,8 @@ model Votes {
 
     poll       Poll       @relation(fields: [pollId], references: [id])
     pollOption PollOption @relation(fields: [pollOptionId], references: [id])
-    vote       Voter      @relation(fields: [voteId], references: [id])
+    voter      Voter      @relation(fields: [voterId], references: [id])
 
-    @@unique([pollId, voteId])
+    @@unique([pollId, voterId])
     @@map("votes")
 }

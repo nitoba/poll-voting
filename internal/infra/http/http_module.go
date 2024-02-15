@@ -35,6 +35,12 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "voteRepository",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return infra_repositories.NewVoteRepositoryPrisma(ctn.Get("db").(*db.PrismaClient)), nil
+			},
+		},
+		{
 			Name: "pollsRepository",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return infra_repositories.NewPollsRepositoryPrisma(ctn.Get("db").(*db.PrismaClient)), nil
@@ -85,6 +91,16 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "voteOnPollUseCase",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return usecases.NewVoteOnPollUseCase(
+					ctn.Get("voteRepository").(*infra_repositories.VoteRepositoryPrisma),
+					ctn.Get("pollsRepository").(*infra_repositories.PollsRepositoryPrisma),
+					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
+				), nil
+			},
+		},
+		{
 			Name: "registerController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewRegisterVoterController(ctn.Get("registerVoterUseCase").(*usecases.RegisterVoterUseCase)), nil
@@ -112,6 +128,12 @@ func NewHttpModule() *HttpModule {
 			Name: "getPollByIdController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewGetPollByIdController(ctn.Get("getPollByIdUseCase").(*usecases.GetPollByIdUseCase)), nil
+			},
+		},
+		{
+			Name: "voteOnPollController",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return controllers.NewVoteOnPollController(ctn.Get("voteOnPollUseCase").(*usecases.VoteOnPollUseCase)), nil
 			},
 		},
 	}

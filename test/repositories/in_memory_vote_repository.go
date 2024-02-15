@@ -19,15 +19,6 @@ func (repo *InMemoryVotesRepository) Create(vote *entities.Vote) error {
 	return nil
 }
 
-func (repo *InMemoryVotesRepository) FindByOptionId(id string) (*entities.Vote, error) {
-	for _, p := range repo.Votes {
-		if p.OptionId.String() == id {
-			return p, nil
-		}
-	}
-	return nil, errors.New("vote not found")
-}
-
 func (repo *InMemoryVotesRepository) Delete(vote *entities.Vote) error {
 	for i, v := range repo.Votes {
 		if v.OptionId.String() == vote.OptionId.String() {
