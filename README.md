@@ -1,8 +1,12 @@
-# 📊 Documentação da Test API de Votação em Enquetes
+# 📊 Poll Voting
 
 ## 🚀 Introdução
 
-Bem-vindo à documentação da Test API para votações em enquetes. Esta API foi desenvolvida utilizando as seguintes tecnologias:
+Inspirado pela NLW Expect da [Rocketseat](https://rocketseat.com.br), onde um projeto semelhante foi desenvolvido na trilha de NodeJS.
+Poll Voting é uma api construída em [Golang](https://golang.org/) para votações em enquetes. 
+A intenção deste projeto é demonstrar a utilização de ferramentas e técnicas de desenvolvimento web em Golang, utilizando habilidades do desenvolvimento backend aprendidas utilizando NodeJS.
+
+## 👨‍💻 Tecnologias
 
 - [Golang](https://golang.org/): Linguagem de programação principal.
 - [PostgreSQL](https://www.postgresql.org/): Banco de dados relacional para armazenar dados persistentes.
@@ -10,7 +14,8 @@ Bem-vindo à documentação da Test API para votações em enquetes. Esta API fo
 - [Gin](https://gin-gonic.com/): Framework web para construir APIs em Golang.
 - [Swagger](https://swagger.io/): Ferramenta para design, construção, documentação e uso de serviços web RESTful.
 - [Prisma ORM](https://www.prisma.io/): ORM (Object-Relational Mapping) para comunicação com o banco de dados.
-- Autenticação JWT: Autenticação baseada em JSON Web Tokens para garantir segurança nas chamadas da API.
+- [Docker](https://www.docker.com/): Ambiente de desenvolvimento para o PostgreSQL e Redis.
+- [Autenticação JWT](https://jwt.io/): Autenticação baseada em JSON Web Tokens para garantir segurança nas chamadas da API.
 
 ## 🏗️ Padrões de Projeto
 
@@ -28,8 +33,8 @@ A aplicação utiliza o conceito de **Domain Events** para atualizar a contagem 
 
 ## 🌐 GitHub
 
-O código-fonte da aplicação pode ser encontrado no GitHub: [Link do Projeto](https://github.com/seu-usuario/nome-do-repositorio)
+O código-fonte da aplicação pode ser encontrado no GitHub: [Link do Projeto](https://github.com/nitoba/poll-voting)
 
 ## 📧 Contato
 
-Em caso de dúvidas ou sugestões, entre em contato através do e-mail: [seu.email@example.com](mailto:seu.email@example.com).
+Em caso de dúvidas ou sugestões, entre em contato através do e-mail: [nito.ba.dev@gmail.com](mailto:nito.ba.dev@gmail.com).
