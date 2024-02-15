@@ -50,6 +50,19 @@ definitions:
     type: object
   polls_presenter.FetchPollsResponse:
     properties:
+      id:
+        type: string
+      options:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+  polls_presenter.GetPollByIdResponse:
+    properties:
+      id:
+        type: string
       options:
         items:
           type: string
@@ -183,6 +196,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create Polls
+      tags:
+      - polls
+  /polls/{pollId}:
+    get:
+      consumes:
+      - application/json
+      description: Get poll by ID in the API
+      parameters:
+      - description: poll id
+        in: path
+        name: pollId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/polls_presenter.GetPollByIdResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Poll by ID
       tags:
       - polls
 securityDefinitions:

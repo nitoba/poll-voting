@@ -21,6 +21,7 @@ type GetPollByIdController struct {
 // @Success      200  {object} polls_presenter.GetPollByIdResponse
 // @Failure      400  {object} Error
 // @Failure      500  {object} Error
+// @Param pollId path string true "poll id"
 // @Router       /polls/{pollId} [get]
 // @Security ApiKeyAuth
 func (ct *GetPollByIdController) Handle(c *gin.Context) {
