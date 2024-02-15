@@ -48,6 +48,13 @@ definitions:
     - name
     - password
     type: object
+  controllers.VoteOnPollRequest:
+    properties:
+      option_id:
+        type: string
+    required:
+    - option_id
+    type: object
   polls_presenter.FetchPollsResponse:
     properties:
       id:
@@ -234,6 +241,41 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get Poll by ID
+      tags:
+      - polls
+  /polls/{pollId}/vote:
+    post:
+      consumes:
+      - application/json
+      description: Vote On poll in the API
+      parameters:
+      - description: vote on poll data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.VoteOnPollRequest'
+      - description: poll id
+        in: path
+        name: pollId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Vote On Poll
       tags:
       - polls
 securityDefinitions:

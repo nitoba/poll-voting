@@ -20,7 +20,8 @@ type VoteOnPollRequest struct {
 // @Description  Vote On poll in the API
 // @Tags         polls
 // @Accept       json
-// @Param        request   body     VoteOnPollRequest  true  "poll data"
+// @Param        request   body     VoteOnPollRequest  true  "vote on poll data"
+// @Param pollId path string true "poll id"
 // @Produce      json
 // @Success      201
 // @Failure      400  {object} Error
