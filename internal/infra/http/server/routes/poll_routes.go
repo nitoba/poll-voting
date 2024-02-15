@@ -16,6 +16,7 @@ func PollRoutes(app *gin.Engine) {
 	createPollController := ctn.Get("createPollController").(*controllers.CreatePollController)
 	fetchPollsController := ctn.Get("fetchPollsController").(*controllers.FetchPollsController)
 	getPollByIdController := ctn.Get("getPollByIdController").(*controllers.GetPollByIdController)
+	voteOnPollController := ctn.Get("voteOnPollController").(*controllers.VoteOnPollController)
 
 	router := app.Group("/polls")
 	router.Use(middlewares.AuthRequired(jwtEncrypter, voterRepository))
@@ -23,5 +24,6 @@ func PollRoutes(app *gin.Engine) {
 		router.GET("/", fetchPollsController.Handle)
 		router.GET("/:id", getPollByIdController.Handle)
 		router.POST("/", createPollController.Handle)
+		router.POST("/:id/vote", voteOnPollController.Handle)
 	}
 }

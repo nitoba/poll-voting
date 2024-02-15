@@ -47,7 +47,7 @@ func (ct *VoteOnPollController) Handle(c *gin.Context) {
 		return
 	}
 
-	pollId := c.Param("pollId")
+	pollId := c.Param("id")
 
 	if pollId == "" {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
