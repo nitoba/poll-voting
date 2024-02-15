@@ -54,7 +54,7 @@ definitions:
         type: string
       options:
         items:
-          type: string
+          $ref: '#/definitions/polls_presenter.option'
         type: array
       title:
         type: string
@@ -65,8 +65,15 @@ definitions:
         type: string
       options:
         items:
-          type: string
+          $ref: '#/definitions/polls_presenter.option'
         type: array
+      title:
+        type: string
+    type: object
+  polls_presenter.option:
+    properties:
+      id:
+        type: string
       title:
         type: string
     type: object

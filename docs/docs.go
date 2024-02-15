@@ -333,7 +333,7 @@ const docTemplate = `{
                 "options": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/polls_presenter.option"
                     }
                 },
                 "title": {
@@ -350,8 +350,19 @@ const docTemplate = `{
                 "options": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "$ref": "#/definitions/polls_presenter.option"
                     }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "polls_presenter.option": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"

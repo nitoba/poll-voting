@@ -85,17 +85,21 @@ func (suite *GetPollByIdControllerTestSuite) TestHandle() {
 
 		pollId := core.NewUniqueEntityId()
 
+		option1 := factories.MakePoolOption(factories.OptionalPollOptionParams{
+			Title: "Option 1",
+		})
+
+		option2 := factories.MakePoolOption(factories.OptionalPollOptionParams{
+			Title: "Option 2",
+		})
+
 		factories.MakePrismaPoll(factories.OptionalPollParams{
 			Id:      &pollId,
 			Title:   "Poll example",
 			OwnerId: &userID,
 			Options: []*entities.PollOption{
-				factories.MakePoolOption(factories.OptionalPollOptionParams{
-					Title: "Option 1",
-				}),
-				factories.MakePoolOption(factories.OptionalPollOptionParams{
-					Title: "Option 2",
-				}),
+				option1,
+				option2,
 			},
 		})
 
@@ -106,9 +110,15 @@ func (suite *GetPollByIdControllerTestSuite) TestHandle() {
 		pollResponse := map[string]interface{}{
 			"id":    pollId.String(),
 			"title": "Poll example",
-			"options": []string{
-				"Option 1",
-				"Option 2",
+			"options": []map[string]interface{}{
+				{
+					"id":    option1.Id.String(),
+					"title": "Option 1",
+				},
+				{
+					"id":    option2.Id.String(),
+					"title": "Option 2",
+				},
 			},
 		}
 

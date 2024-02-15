@@ -105,6 +105,7 @@ func MakePrismaPoll(props ...OptionalPollParams) (*entities.Poll, error) {
 		_, err := prisma.GetDB().PollOption.CreateOne(
 			db.PollOption.Title.Set(option.Title),
 			db.PollOption.Poll.Link(db.Poll.ID.Equals(id.String())),
+			db.PollOption.ID.Set(option.Id.String()),
 		).Exec(configs.GetConfig().Ctx)
 
 		if err != nil {
