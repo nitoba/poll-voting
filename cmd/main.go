@@ -5,6 +5,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/internal/infra/messaging/redis"
 	"github.com/nitoba/poll-voting/pkg/di"
 )
 
@@ -28,8 +29,15 @@ import (
 func main() {
 	configs.LoadConfig()
 
-	prisma.Connect()
+	if err := prisma.Connect(); err != nil {
+		panic(err)
+	}
 	defer prisma.Disconnect()
+
+	if err := redis.Connect(); err != nil {
+		panic(err)
+	}
+	defer redis.Disconnect()
 
 	di.InitContainer()
 

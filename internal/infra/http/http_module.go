@@ -6,8 +6,10 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra/database"
 	infra_repositories "github.com/nitoba/poll-voting/internal/infra/database/prisma/repositories"
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
+	redis_repositories "github.com/nitoba/poll-voting/internal/infra/messaging/redis/repositories"
 	"github.com/nitoba/poll-voting/pkg/module"
 	"github.com/nitoba/poll-voting/prisma/db"
+	"github.com/redis/go-redis/v9"
 )
 
 type HttpModule struct {
@@ -26,6 +28,12 @@ func NewHttpModule() *HttpModule {
 			Name: "encrypter",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return infra_cryptography.NewJWTEncrypter(), nil
+			},
+		},
+		{
+			Name: "countingVotingRepository",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return redis_repositories.NewCountingVotingRepositoryRedis(ctn.Get("redis").(*redis.Conn)), nil
 			},
 		},
 		{
@@ -97,7 +105,7 @@ func NewHttpModule() *HttpModule {
 					ctn.Get("voteRepository").(*infra_repositories.VoteRepositoryPrisma),
 					ctn.Get("pollsRepository").(*infra_repositories.PollsRepositoryPrisma),
 					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
-					nil, // TODO: Add counting votes repository use case
+					ctn.Get("countingVotingRepository").(*redis_repositories.CountingVotingRepositoryRedis),
 				), nil
 			},
 		},
