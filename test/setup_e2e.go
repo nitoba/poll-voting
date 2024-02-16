@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
+	"github.com/nitoba/poll-voting/internal/infra/messaging/redis"
 )
 
 var newSchemaID = uuid.New().String()
@@ -42,12 +43,22 @@ func SetupDatabase() {
 	prisma.Connect()
 }
 
+func SetupRedis() {
+	configs.LoadConfig(".env.test")
+	redis.Connect()
+}
+
 func TruncateTables() {
 	database := prisma.GetDB()
 	query := `TRUNCATE TABLE "schema".voters, "schema".polls, "schema".poll_options, "schema".votes CASCADE`
 	query = strings.ReplaceAll(query, "schema", newSchemaID)
 	println("Truncating tables: ", query)
 	database.Prisma.ExecuteRaw(query).Exec(configs.GetConfig().Ctx)
+}
+
+func TruncateRedis() {
+	redis := redis.GetRedis()
+	redis.FlushDB(configs.GetConfig().Ctx)
 }
 
 func AfterAll() {
@@ -60,4 +71,5 @@ func AfterAll() {
 		println("Error to drop schema: ", err.Error())
 	}
 	prisma.Disconnect()
+	redis.Disconnect()
 }

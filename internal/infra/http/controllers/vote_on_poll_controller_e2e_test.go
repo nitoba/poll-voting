@@ -13,6 +13,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/internal/infra/messaging/redis"
 	"github.com/nitoba/poll-voting/pkg/di"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/nitoba/poll-voting/test"
@@ -39,6 +40,7 @@ func (s *VoteOnPollControllerTestSuite) SetupSuite() {
 	di.BuildDependencies()
 
 	test.SetupDatabase()
+	test.SetupRedis()
 
 	server := server.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
@@ -63,6 +65,7 @@ func (suite *VoteOnPollControllerTestSuite) TearDownSuite() {
 // Run this function before every test
 func (suite *VoteOnPollControllerTestSuite) SetupTest() {
 	test.TruncateTables()
+	test.TruncateRedis()
 }
 
 // Run this function after every test
@@ -118,6 +121,9 @@ func (suite *VoteOnPollControllerTestSuite) TestE2EHandle() {
 
 		vote, _ := prisma.GetDB().Votes.FindFirst(db.Votes.PollID.Equals(pollId.String())).Exec(configs.GetConfig().Ctx)
 		suite.Equal(option1.Id.String(), vote.PollOptionID)
+
+		count := redis.GetRedis().ZScore(configs.GetConfig().Ctx, pollId.String(), option1.Id.String())
+		suite.Equal(float64(1), count.Val())
 	})
 }
 
@@ -166,5 +172,9 @@ func (suite *VoteOnPollControllerTestSuite) TestE2EHandleWithVoteChanged() {
 		suite.Equal(option2.Id.String(), vote.PollOptionID)
 		votes, _ := prisma.GetDB().Votes.FindMany().Exec(configs.GetConfig().Ctx)
 		suite.Len(votes, 1)
+		count1 := redis.GetRedis().ZScore(configs.GetConfig().Ctx, pollId.String(), option1.Id.String())
+		count2 := redis.GetRedis().ZScore(configs.GetConfig().Ctx, pollId.String(), option2.Id.String())
+		suite.Equal(float64(0), count1.Val())
+		suite.Equal(float64(1), count2.Val())
 	})
 }
