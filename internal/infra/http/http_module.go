@@ -1,12 +1,14 @@
 package http
 
 import (
+	usecase_notification "github.com/nitoba/poll-voting/internal/domain/notification/application/usecases"
 	"github.com/nitoba/poll-voting/internal/domain/poll/application/usecases"
 	infra_cryptography "github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database"
 	infra_repositories "github.com/nitoba/poll-voting/internal/infra/database/prisma/repositories"
 	redis_repositories "github.com/nitoba/poll-voting/internal/infra/database/redis/repositories"
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
+	"github.com/nitoba/poll-voting/internal/infra/http/ws"
 	"github.com/nitoba/poll-voting/pkg/module"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/redis/go-redis/v9"
@@ -28,6 +30,12 @@ func NewHttpModule() *HttpModule {
 			Name: "encrypter",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return infra_cryptography.NewJWTEncrypter(), nil
+			},
+		},
+		{
+			Name: "updateCountingVotesPublisher",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return ws.NewUpdateCountingVotesPublisher(), nil
 			},
 		},
 		{
@@ -110,6 +118,18 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "updateVotingCountUseCase",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return usecase_notification.NewUpdateVotingCountUseCase(ctn.Get("updateCountingVotesPublisher").(*ws.UpdateCountingVotesPublisher)), nil
+			},
+		},
+		{
+			Name: "onVoteChangedSubscriber",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return usecase_notification.NewUpdateVotingCountUseCase(ctn.Get("updateCountingVotesPublisher").(*ws.UpdateCountingVotesPublisher)), nil
+			},
+		},
+		{
 			Name: "registerController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewRegisterVoterController(ctn.Get("registerVoterUseCase").(*usecases.RegisterVoterUseCase)), nil
@@ -143,6 +163,12 @@ func NewHttpModule() *HttpModule {
 			Name: "voteOnPollController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewVoteOnPollController(ctn.Get("voteOnPollUseCase").(*usecases.VoteOnPollUseCase)), nil
+			},
+		},
+		{
+			Name: "updateCountingVotesController",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return controllers.NewUpdateCountingVotesController(), nil
 			},
 		},
 	}

@@ -5,7 +5,9 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	"github.com/nitoba/poll-voting/internal/infra/database/redis"
+	"github.com/nitoba/poll-voting/internal/infra/events"
 	server "github.com/nitoba/poll-voting/internal/infra/http/rest"
+	"github.com/nitoba/poll-voting/internal/infra/http/ws"
 	"github.com/nitoba/poll-voting/pkg/di"
 )
 
@@ -46,6 +48,11 @@ func main() {
 	di.RegisterModuleProviders(app.Providers)
 
 	di.BuildDependencies()
+
+	events.NewEventModule()
+
+	//Open a goroutine execution start program
+	go ws.Manager.Start()
 
 	server := server.GetServer()
 

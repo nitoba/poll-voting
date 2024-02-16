@@ -1,34 +1,36 @@
 package ws
 
 import (
-	"github.com/gorilla/websocket"
+	"encoding/json"
+
 	"github.com/nitoba/poll-voting/internal/domain/notification/enterprise/entities"
 )
 
-type UpdateCountingVotesPublisher struct {
-	conn *websocket.Conn
-}
+type UpdateCountingVotesPublisher struct{}
 
-type Message struct {
+type Messages struct {
 	Title        string `json:"title"`
 	VoteCount    int    `json:"vote_count"`
 	PollOptionId string `json:"poll_option_id"`
 }
 
 func (p *UpdateCountingVotesPublisher) Publish(message *entities.Notification) error {
-	msg := &Message{
+	msg := &Messages{
 		Title:        message.Title,
 		VoteCount:    message.Content.Count,
 		PollOptionId: message.Content.PollOptionId,
 	}
-	if err := p.conn.WriteJSON(msg); err != nil {
+
+	msgBytes, err := json.Marshal(msg)
+
+	if err != nil {
 		return err
 	}
+
+	Manager.send(msgBytes, nil)
 	return nil
 }
 
-func NewUpdateCountingVotesPublisher(conn *websocket.Conn) *UpdateCountingVotesPublisher {
-	return &UpdateCountingVotesPublisher{
-		conn: conn,
-	}
+func NewUpdateCountingVotesPublisher() *UpdateCountingVotesPublisher {
+	return &UpdateCountingVotesPublisher{}
 }
