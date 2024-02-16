@@ -19,7 +19,7 @@ func Connect() error {
 	r := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: config.RedisPassword,
-		DB:       0, // use default DB
+		DB:       config.RedisDb,
 		OnConnect: func(ctx context.Context, cn *redis.Conn) error {
 			logger.Info("connected with redis")
 			rdb = cn

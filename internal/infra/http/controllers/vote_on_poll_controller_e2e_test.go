@@ -69,9 +69,10 @@ func (suite *VoteOnPollControllerTestSuite) SetupTest() {
 }
 
 // Run this function after every test
-// func (suite *VoteOnPollControllerTestSuite) TearDownTest() {
-// 	test.TruncateTables()
-// }
+func (suite *VoteOnPollControllerTestSuite) TearDownTest() {
+	test.TruncateRedis()
+	test.TruncateTables()
+}
 
 func TestVoteOnPollControllerSuite(t *testing.T) {
 	// Register the test suite
