@@ -4,7 +4,7 @@ APP_NAME=poll-voting
 APP_ENTRY_POINT=./cmd/main.go
 
 # Tasks
-default: run
+default: run-with-docs
 
 prisma-migrate-dev:
 	@go run github.com/steebchen/prisma-client-go migrate dev
@@ -18,7 +18,7 @@ prisma-deploy:
 run:
 	@go run $(APP_ENTRY_POINT)
 run-with-docs:
-	@swag init -g $(APP_ENTRY_POINT) -o ./docs
+	@go run github.com/swaggo/swag/cmd/swag@latest init -g $(APP_ENTRY_POINT) -o ./docs
 	@go run $(APP_ENTRY_POINT)
 build:
 	@go build -o $(APP_NAME) $(APP_ENTRY_POINT)

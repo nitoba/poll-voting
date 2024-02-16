@@ -3,7 +3,7 @@
 ## 🚀 Introdução
 
 Inspirado pela NLW Expect da [Rocketseat](https://rocketseat.com.br), onde um projeto semelhante foi desenvolvido na trilha de NodeJS.
-Poll Voting é uma api construída em [Golang](https://golang.org/) para votações em enquetes. 
+Poll Voting é uma api construída em [Golang](https://golang.org/) para votações em enquetes.
 A intenção deste projeto é demonstrar a utilização de ferramentas e técnicas de desenvolvimento web em Golang, utilizando habilidades do desenvolvimento backend aprendidas utilizando NodeJS.
 
 ## 👨‍💻 Tecnologias
@@ -26,6 +26,8 @@ A aplicação segue os seguintes padrões de projeto:
 2. **Domain Driven Design (DDD)**: O design do software é orientado pelo domínio, com foco nas regras de negócio e nas entidades principais.
 
 3. **Injeção de Dependência**: A inversão de controle e injeção de dependência são utilizadas para garantir a flexibilidade e testabilidade do código.
+
+4. **Testes automatizado**: Os testes unitários, integração e end-2-end são escritos para garantir a qualidade do código.
 
 ## 🔄 Domain Events
 
