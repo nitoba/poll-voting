@@ -30,4 +30,4 @@ jobs:
         run: go build -v cmd/main.go
 
       - name: Test
-        run: go test -v $(go list ./... | grep -v -e "_e2e_test.go")
+        run: IGNORE_E2E=1 go test -v ./...

@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
@@ -67,10 +68,13 @@ func (suite *RegisterVoterControllerTestSuite) SetupTest() {
 
 func TestRegisterVoterControllerSuite(t *testing.T) {
 	// Register the test suite
+	if os.Getenv("IGNORE_E2E") != "" {
+		t.Skip("Ignorando testes E2E")
+	}
 	suite.Run(t, new(RegisterVoterControllerTestSuite))
 }
 
-func (suite *RegisterVoterControllerTestSuite) TestHandle() {
+func (suite *RegisterVoterControllerTestSuite) TestE2EHandle() {
 	suite.Run("should return 204 if voter was created", func() {
 		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
 			"name":     "John Doe",
@@ -86,7 +90,7 @@ func (suite *RegisterVoterControllerTestSuite) TestHandle() {
 	})
 }
 
-func (suite *RegisterVoterControllerTestSuite) TestHandleInvalidData() {
+func (suite *RegisterVoterControllerTestSuite) TestE2EHandleInvalidData() {
 	suite.Run("should return 400 if the data if not valid", func() {
 		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
 			"name":     "",
@@ -96,7 +100,7 @@ func (suite *RegisterVoterControllerTestSuite) TestHandleInvalidData() {
 	})
 }
 
-func (suite *RegisterVoterControllerTestSuite) TestHandleVoterAlreadyExists() {
+func (suite *RegisterVoterControllerTestSuite) TestE2EHandleVoterAlreadyExists() {
 	suite.Run("should return 409 if the voter already exists", func() {
 		factories.MakePrismaVoter(factories.OptionalVoterParams{
 			Email: "john.doe@gmail.com",

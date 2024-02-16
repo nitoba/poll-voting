@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
@@ -66,10 +67,13 @@ func (suite *AuthenticateVoterControllerTestSuite) SetupTest() {
 
 func TestAuthenticateVoterControllerSuite(t *testing.T) {
 	// Register the test suite
+	if os.Getenv("IGNORE_E2E") != "" {
+		t.Skip("Ignorando testes E2E")
+	}
 	suite.Run(t, new(AuthenticateVoterControllerTestSuite))
 }
 
-func (suite *AuthenticateVoterControllerTestSuite) TestHandle() {
+func (suite *AuthenticateVoterControllerTestSuite) TestE2EHandle() {
 	suite.Run("should return 200 if voter was authenticated", func() {
 		password, _ := di.GetContainer().Get("hasher").(*cryptography.BCryptHasher).Hash("123456")
 
@@ -84,7 +88,7 @@ func (suite *AuthenticateVoterControllerTestSuite) TestHandle() {
 	})
 }
 
-func (suite *AuthenticateVoterControllerTestSuite) TestHandleInvalidData() {
+func (suite *AuthenticateVoterControllerTestSuite) TestE2EHandleInvalidData() {
 	suite.Run("should return 400 if voter data is not valid", func() {
 		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
 			"email":    "john.doe@gmail.com",

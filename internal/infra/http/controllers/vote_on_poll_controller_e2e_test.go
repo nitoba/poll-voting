@@ -2,6 +2,7 @@ package controllers_test
 
 import (
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
@@ -71,10 +72,13 @@ func (suite *VoteOnPollControllerTestSuite) SetupTest() {
 
 func TestVoteOnPollControllerSuite(t *testing.T) {
 	// Register the test suite
+	if os.Getenv("IGNORE_E2E") != "" {
+		t.Skip("Ignorando testes E2E")
+	}
 	suite.Run(t, new(VoteOnPollControllerTestSuite))
 }
 
-func (suite *VoteOnPollControllerTestSuite) TestHandle() {
+func (suite *VoteOnPollControllerTestSuite) TestE2EHandle() {
 	suite.Run("should return 201 if vote is created", func() {
 		userID := core.NewUniqueEntityId()
 
@@ -117,7 +121,7 @@ func (suite *VoteOnPollControllerTestSuite) TestHandle() {
 	})
 }
 
-func (suite *VoteOnPollControllerTestSuite) TestHandleWithVoteChanged() {
+func (suite *VoteOnPollControllerTestSuite) TestE2EHandleWithVoteChanged() {
 	suite.Run("should return 201 if vote is changed", func() {
 		userID := core.NewUniqueEntityId()
 
