@@ -27,7 +27,7 @@ A aplicação segue os seguintes padrões de projeto:
 
 3. **Injeção de Dependência**: A inversão de controle e injeção de dependência são utilizadas para garantir a flexibilidade e testabilidade do código.
 
-4. **Testes automatizado**: Os testes unitários, integração e end-2-end são escritos para garantir a qualidade do código.
+4. **Testes automatizados**: Os testes unitários, integração e end-2-end são escritos para garantir a qualidade do código.
 
 ## 🔄 Domain Events
 
