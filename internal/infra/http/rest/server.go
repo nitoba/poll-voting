@@ -1,9 +1,9 @@
-package server
+package rest
 
 import (
 	"github.com/gin-gonic/gin"
 	configs "github.com/nitoba/poll-voting/config"
-	"github.com/nitoba/poll-voting/internal/infra/http/server/routes"
+	"github.com/nitoba/poll-voting/internal/infra/http/rest/routes"
 )
 
 func GetServer() *gin.Engine {

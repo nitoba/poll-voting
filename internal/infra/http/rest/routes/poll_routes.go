@@ -5,7 +5,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma/repositories"
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
-	"github.com/nitoba/poll-voting/internal/infra/http/server/middlewares"
+	"github.com/nitoba/poll-voting/internal/infra/http/rest/middlewares"
 	"github.com/nitoba/poll-voting/pkg/di"
 )
 

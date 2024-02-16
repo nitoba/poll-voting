@@ -11,7 +11,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
-	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/internal/infra/http/rest"
 	"github.com/nitoba/poll-voting/pkg/di"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/nitoba/poll-voting/test"
@@ -40,7 +40,7 @@ func (s *CreatePollControllerTestSuite) SetupSuite() {
 
 	test.SetupDatabase()
 
-	server := server.GetServer()
+	server := rest.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
 		Client: &http.Client{
 			Transport: httpexpect.NewBinder(server),

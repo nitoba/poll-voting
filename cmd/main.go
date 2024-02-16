@@ -4,7 +4,7 @@ import (
 	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/infra"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
-	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	server "github.com/nitoba/poll-voting/internal/infra/http/rest"
 	"github.com/nitoba/poll-voting/internal/infra/messaging/redis"
 	"github.com/nitoba/poll-voting/pkg/di"
 )

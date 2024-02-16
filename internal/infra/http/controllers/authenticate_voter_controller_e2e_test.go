@@ -8,7 +8,7 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
-	"github.com/nitoba/poll-voting/internal/infra/http/server"
+	"github.com/nitoba/poll-voting/internal/infra/http/rest"
 	"github.com/nitoba/poll-voting/pkg/di"
 	"github.com/nitoba/poll-voting/test"
 	"github.com/nitoba/poll-voting/test/factories"
@@ -35,7 +35,7 @@ func (s *AuthenticateVoterControllerTestSuite) SetupSuite() {
 
 	test.SetupDatabase()
 
-	server := server.GetServer()
+	server := rest.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
 		Client: &http.Client{
 			Transport: httpexpect.NewBinder(server),
