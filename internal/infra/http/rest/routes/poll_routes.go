@@ -23,6 +23,7 @@ func PollRoutes(app *gin.Engine) {
 	{
 		router.GET("/", fetchPollsController.Handle)
 		router.GET("/:id", getPollByIdController.Handle)
+		router.GET("/:id/results", getPollByIdController.Handle)
 		router.POST("/", createPollController.Handle)
 		router.POST("/:id/vote", voteOnPollController.Handle)
 	}
