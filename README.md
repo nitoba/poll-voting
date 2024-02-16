@@ -52,13 +52,13 @@ Para rodar essa aplicação, você precisa ter o [Golang](https://golang.org/) e
 - Rode o comando `make` para iniciar a aplicação.
 - Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html`
 
-## Rodando via Docker
+## 🐳 Rodando via Docker
 
 Rodando via Docker é uma forma mais simples de rodar a aplicação.
 Não há necessidade de ter o Golang instalado em sua máquina.
 
 - Rode o comando `make docker-run` para iniciar o container da aplicação.
-- Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html
+- Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html`
 
 ## 🧪 Testes
 
