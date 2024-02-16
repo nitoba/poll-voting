@@ -10,9 +10,10 @@ import (
 )
 
 type VoteOnPollUseCase struct {
-	voteRepo  repositories.VotesRepository
-	pollRepo  repositories.PollsRepository
-	voterRepo repositories.VotersRepository
+	voteRepo       repositories.VotesRepository
+	pollRepo       repositories.PollsRepository
+	voterRepo      repositories.VotersRepository
+	countVotesRepo repositories.CountingVotesRepository
 }
 
 type VoteOnPollUseCaseRequest struct {
@@ -55,11 +56,21 @@ func (u *VoteOnPollUseCase) Execute(req *VoteOnPollUseCaseRequest) error {
 			return err
 		}
 
+		if _, err := u.countVotesRepo.DecrementCountVotesByOptionId(previousVote.PollId.String(), previousVote.OptionId.String()); err != nil {
+			return err
+		}
+
 		previousVote.ChangeVoteOption(req.PollOptionId)
 
 		if err := u.voteRepo.Create(previousVote); err != nil {
 			return err
 		}
+
+		if _, err := u.countVotesRepo.IncrementCountVotesByOptionId(previousVote.PollId.String(), previousVote.OptionId.String()); err != nil {
+			return err
+		}
+
+		core.DomainEvents().DispatchEventsForAggregate(previousVote.Id)
 		return nil
 	} else {
 		// if previous vote does not exist, create a new one
@@ -72,15 +83,21 @@ func (u *VoteOnPollUseCase) Execute(req *VoteOnPollUseCaseRequest) error {
 		if err := u.voteRepo.Create(vote); err != nil {
 			return err
 		}
-	}
 
-	return nil
+		if _, err := u.countVotesRepo.IncrementCountVotesByOptionId(vote.PollId.String(), vote.OptionId.String()); err != nil {
+			return err
+		}
+
+		core.DomainEvents().DispatchEventsForAggregate(vote.Id)
+		return nil
+	}
 }
 
-func NewVoteOnPollUseCase(voteRepo repositories.VotesRepository, pollRepo repositories.PollsRepository, voterRepo repositories.VotersRepository) *VoteOnPollUseCase {
+func NewVoteOnPollUseCase(voteRepo repositories.VotesRepository, pollRepo repositories.PollsRepository, voterRepo repositories.VotersRepository, countVotesRepo repositories.CountingVotesRepository) *VoteOnPollUseCase {
 	return &VoteOnPollUseCase{
-		voteRepo:  voteRepo,
-		pollRepo:  pollRepo,
-		voterRepo: voterRepo,
+		voteRepo:       voteRepo,
+		pollRepo:       pollRepo,
+		voterRepo:      voterRepo,
+		countVotesRepo: countVotesRepo,
 	}
 }

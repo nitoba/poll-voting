@@ -97,6 +97,7 @@ func NewHttpModule() *HttpModule {
 					ctn.Get("voteRepository").(*infra_repositories.VoteRepositoryPrisma),
 					ctn.Get("pollsRepository").(*infra_repositories.PollsRepositoryPrisma),
 					ctn.Get("voterRepository").(*infra_repositories.VotersRepositoryPrisma),
+					nil, // TODO: Add counting votes repository use case
 				), nil
 			},
 		},

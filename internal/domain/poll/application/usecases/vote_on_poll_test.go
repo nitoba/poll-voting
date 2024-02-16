@@ -26,13 +26,14 @@ func makeVoteOnPollUseCase() VoteOnPollUseCaseConfig {
 		CountingRepository: *countingRepo,
 	}
 	voterRepo := &repositories_test.InMemoryVotersRepository{}
-	sut := usecases.NewVoteOnPollUseCase(voteRepo, pollRepo, voterRepo)
+	sut := usecases.NewVoteOnPollUseCase(voteRepo, pollRepo, voterRepo, countingRepo)
 
 	return VoteOnPollUseCaseConfig{
-		pollRepo:  pollRepo,
-		voteRepo:  voteRepo,
-		voterRepo: voterRepo,
-		sut:       sut,
+		countingRepo: countingRepo,
+		pollRepo:     pollRepo,
+		voteRepo:     voteRepo,
+		voterRepo:    voterRepo,
+		sut:          sut,
 	}
 }
 
