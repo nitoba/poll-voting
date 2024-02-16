@@ -54,12 +54,16 @@ Para rodar essa aplicação, você precisa ter o [Golang](https://golang.org/) e
 
 ## Rodando via Docker
 
+Rodando via Docker é uma forma mais simples de rodar a aplicação.
+Não há necessidade de ter o Golang instalado em sua máquina.
+
 - Rode o comando `make docker-run` para iniciar o container da aplicação.
 - Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html
 
 ## 🧪 Testes
 
-Para rodar os testes, execute o comando `make tests` no terminal.
+- Rode o comando `make env-test` para criar o arquivo de variáveis de ambiente de tests.
+- Para rodar os testes, execute o comando `make tests` no terminal.
 
 ## 📄 Licença
 

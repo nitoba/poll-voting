@@ -1,4 +1,4 @@
-.PHONY: default run build tests clean prisma-migrate-dev prisma-generate prisma-deploy env
+.PHONY: default run build tests clean prisma-migrate-dev prisma-generate prisma-deploy env env-test
 # Variables
 APP_NAME=poll-voting
 APP_ENTRY_POINT=./cmd/main.go
@@ -26,6 +26,8 @@ tests:
 	@go test -v ./...
 env:
 	@cp .env.example .env
+env-test:
+	@cp .env.example .env.test
 clean:
 	@rm -f $(APP_NAME)
 	@rm -rf ./docs
