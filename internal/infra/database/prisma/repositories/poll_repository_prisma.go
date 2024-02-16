@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma/mappers"
@@ -20,24 +22,25 @@ func (r *PollsRepositoryPrisma) Create(poll *entities.Poll) error {
 		db.Poll.ID.Set(poll.Id.String()),
 	).Tx()
 
-	if err := r.db.Prisma.Transaction(pollTx).Exec(ctx); err != nil {
-		return err
+	baseQuery := "INSERT INTO poll_options (id, title, poll_id) VALUES "
+	values := []interface{}{}
+
+	for i, option := range poll.Options {
+		if i != 0 {
+			baseQuery += ", "
+		}
+		baseQuery += fmt.Sprintf("($%d, $%d, $%d)", i*3+1, i*3+2, i*3+3)
+		values = append(values, option.Id.String(), option.Title, poll.Id.String())
 	}
 
-	for _, option := range poll.Options {
-		tx := r.db.PollOption.CreateOne(
-			db.PollOption.Title.Set(option.Title),
-			db.PollOption.Poll.Link(db.Poll.ID.Equals(poll.Id.String())),
-		).Tx()
+	optionsTx := r.db.Prisma.ExecuteRaw(baseQuery, values...).Tx()
 
-		if err := r.db.Prisma.Transaction(tx).Exec(ctx); err != nil {
-			return err
-		}
+	if err := r.db.Prisma.Transaction(pollTx, optionsTx).Exec(ctx); err != nil {
+		return err
 	}
 
 	return nil
 }
-
 func (r *PollsRepositoryPrisma) FindById(id string) (*entities.Poll, error) {
 	ctx := configs.GetConfig().Ctx
 	poll, err := r.db.Poll.FindUnique(db.Poll.ID.Equals(id)).With(db.Poll.Options.Fetch()).Exec(ctx)

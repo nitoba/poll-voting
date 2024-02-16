@@ -9,52 +9,52 @@ generator db {
 }
 
 model Voter {
-    id       String @id @default(uuid())
-    name     String
-    email    String @unique
-    password String
+    id         String       @id @default(uuid())
+    name       String
+    email      String       @unique
+    password   String
+    votes      Votes[]
+    pollOption PollOption[]
+    poll       Poll[]
 
-    createdAt  DateTime     @default(now()) @map("created_at")
-    updatedAt  DateTime     @updatedAt @map("updated_at")
-    Votes      Votes[]
-    PollOption PollOption[]
-    Poll       Poll[]
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 
     @@map("voters")
 }
 
 model Poll {
-    id        String   @id @default(uuid())
+    id        String       @id @default(uuid())
     title     String
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
-    ownerId   String
+    ownerId   String       @map("owner_id")
+    votes     Votes[]
+    options   PollOption[]
+    createdAt DateTime     @default(now()) @map("created_at")
+    updatedAt DateTime     @updatedAt @map("updated_at")
 
-    owner   Voter        @relation(fields: [ownerId], references: [id])
-    options PollOption[]
-    Votes   Votes[]
+    owner Voter @relation(fields: [ownerId], references: [id])
 
     @@map("polls")
 }
 
 model PollOption {
-    id     String @id @default(uuid())
-    title  String
-    pollId String
+    id      String  @id @default(uuid())
+    title   String
+    pollId  String  @map("poll_id")
+    voterId String? @map("voter_id")
+    votes   Votes[]
 
-    poll    Poll    @relation(fields: [pollId], references: [id])
-    Votes   Votes[]
-    Voter   Voter?  @relation(fields: [voterId], references: [id])
-    voterId String?
+    poll  Poll   @relation(fields: [pollId], references: [id])
+    voter Voter? @relation(fields: [voterId], references: [id])
 
     @@map("poll_options")
 }
 
 model Votes {
     id           String   @id @default(uuid())
-    voterId      String
-    pollId       String
-    pollOptionId String
+    voterId      String   @map("voter_id")
+    pollId       String   @map("poll_id")
+    pollOptionId String   @map("poll_option_id")
     createdAt    DateTime @default(now()) @map("created_at")
     updatedAt    DateTime @updatedAt @map("updated_at")
 
