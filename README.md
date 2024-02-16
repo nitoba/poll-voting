@@ -31,7 +31,39 @@ A aplicação segue os seguintes padrões de projeto:
 
 ## 🔄 Domain Events
 
-A aplicação utiliza o conceito de **Domain Events** para atualizar a contagem de votos quando um novo voto é registrado ou alterado. Isso garante que a lógica de negócio relacionada à contagem de votos permaneça consistente.
+Um dos diferenciais dessa aplicação é a utilização do conceito de **Domain Events** para atualizar a contagem de votos quando um novo voto é registrado ou alterado. Isso garante que a lógica de negócio relacionada à contagem de votos permaneça consistente.
+
+## 🎯 Principais Funcionalidades
+
+- [x] Possível se autenticar na aplicação. (registro e login)
+- [x] Criar enquetes
+- [x] Buscar enquentes
+- [x] Votar em enquetes
+- [x] Contagem de votos em tempo real
+
+## 🔧 Rodando o projeto
+
+Para rodar essa aplicação, você precisa ter o [Golang](https://golang.org/) e o [Docker](https://www.docker.com/) instalados em sua máquina.
+
+- Rode o comando `make env` para criar o arquivo de variáveis de ambiente.
+- Inicie os serviços de bancos de dados e cache utilizando o `docker-compose up -d`
+- Rode o comando `go mod tidy` para baixar as dependências.
+- Rode o comando `make prisma-deploy` para aplicar as migrations ao banco de dados.
+- Rode o comando `make` para iniciar a aplicação.
+- Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html`
+
+## Rodando via Docker
+
+- Rode o comando `make docker-run` para iniciar o container da aplicação.
+- Acesse a documentação da API através do endereço `http://localhost:3333/docs/swagger/index.html
+
+## 🧪 Testes
+
+Para rodar os testes, execute o comando `make tests` no terminal.
+
+## 📄 Licença
+
+Esse projeto está sob a licença MIT. Acesse o link [LICENSE](https://mit-license.org/) para mais detalhes.
 
 ## 🌐 GitHub
 
