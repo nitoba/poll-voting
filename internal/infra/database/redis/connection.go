@@ -34,10 +34,12 @@ func Connect() error {
 }
 
 func Disconnect() error {
-	logger := configs.GetLogger("redis")
-	logger.Info("disconnecting with redis")
-	if err := rdb.Close(); err != nil {
-		return err
+	if rdb != nil {
+		logger := configs.GetLogger("redis")
+		logger.Info("disconnecting with redis")
+		if err := rdb.Close(); err != nil {
+			return err
+		}
 	}
 	return nil
 }
