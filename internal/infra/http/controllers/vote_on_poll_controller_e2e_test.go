@@ -11,9 +11,10 @@ import (
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
+	"github.com/nitoba/poll-voting/internal/infra/database/redis"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/rest"
-	"github.com/nitoba/poll-voting/internal/infra/messaging/redis"
+
 	"github.com/nitoba/poll-voting/pkg/di"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/nitoba/poll-voting/test"

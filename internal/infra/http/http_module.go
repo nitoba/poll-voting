@@ -5,9 +5,8 @@ import (
 	infra_cryptography "github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database"
 	infra_repositories "github.com/nitoba/poll-voting/internal/infra/database/prisma/repositories"
+	redis_repositories "github.com/nitoba/poll-voting/internal/infra/database/redis/repositories"
 	"github.com/nitoba/poll-voting/internal/infra/http/controllers"
-	"github.com/nitoba/poll-voting/internal/infra/messaging"
-	redis_repositories "github.com/nitoba/poll-voting/internal/infra/messaging/redis/repositories"
 	"github.com/nitoba/poll-voting/pkg/module"
 	"github.com/nitoba/poll-voting/prisma/db"
 	"github.com/redis/go-redis/v9"
@@ -151,7 +150,6 @@ func NewHttpModule() *HttpModule {
 	m := &HttpModule{
 		Module: module.Module{
 			Imports: module.Imports{
-				messaging.NewMessagingModule(),
 				database.NewDatabaseModule(),
 			},
 			Providers: providers,
