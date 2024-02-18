@@ -118,6 +118,7 @@ func (suite *GetPollByIdControllerTestSuite) TestE2EHandle() {
 		pollResponse := map[string]interface{}{
 			"id":    pollId.String(),
 			"title": "Poll example",
+			"total": 0,
 			"options": []map[string]interface{}{
 				{
 					"id":    option1.Id.String(),
