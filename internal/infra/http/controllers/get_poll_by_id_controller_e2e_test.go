@@ -11,6 +11,7 @@ import (
 	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
+	"github.com/nitoba/poll-voting/internal/infra/database/redis"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
 	"github.com/nitoba/poll-voting/internal/infra/http/rest"
 	"github.com/nitoba/poll-voting/pkg/di"
@@ -40,6 +41,7 @@ func (s *GetPollByIdControllerTestSuite) SetupSuite() {
 	di.BuildDependencies()
 
 	test.SetupDatabase()
+	test.SetupRedis()
 
 	server := rest.GetServer()
 	e := httpexpect.WithConfig(httpexpect.Config{
@@ -64,12 +66,14 @@ func (suite *GetPollByIdControllerTestSuite) TearDownSuite() {
 // Run this function before every test
 func (suite *GetPollByIdControllerTestSuite) SetupTest() {
 	test.TruncateTables()
+	test.TruncateRedis()
 }
 
 // Run this function after every test
-// func (suite *GetPollByIdControllerTestSuite) TearDownTest() {
-// 	test.TruncateTables()
-// }
+func (suite *GetPollByIdControllerTestSuite) TearDownTest() {
+	test.TruncateTables()
+	test.TruncateRedis()
+}
 
 func TestGetPollByIdControllerSuite(t *testing.T) {
 	// Register the test suite
@@ -134,11 +138,64 @@ func (suite *GetPollByIdControllerTestSuite) TestE2EHandle() {
 	})
 }
 
-// func (suite *GetPollByIdControllerTestSuite) TestE2EHandleInvalidData() {
-// 	suite.Run("should return 400 if voter data is not valid", func() {
-// 		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
-// 			"email":    "john.doe@gmail.com",
-// 			"password": "123456",
-// 		}).Expect().Status(http.StatusBadRequest).JSON().Object().ContainsKey("message")
-// 	})
-// }
+func (suite *GetPollByIdControllerTestSuite) TestE2EHandleWithTotalVotes() {
+	suite.Run("should return a poll by id with total votes", func() {
+		userID := core.NewUniqueEntityId()
+
+		factories.MakePrismaVoter(factories.OptionalVoterParams{
+			Id: &userID,
+		})
+
+		pollId := core.NewUniqueEntityId()
+
+		option1 := factories.MakePoolOption(factories.OptionalPollOptionParams{
+			Title: "Option 1",
+		})
+
+		option2 := factories.MakePoolOption(factories.OptionalPollOptionParams{
+			Title: "Option 2",
+		})
+
+		factories.MakePrismaPoll(factories.OptionalPollParams{
+			Id:      &pollId,
+			Title:   "Poll example",
+			OwnerId: &userID,
+			Options: []*entities.PollOption{
+				option1,
+				option2,
+			},
+		})
+
+		redis.GetRedis().ZIncrBy(configs.GetConfig().Ctx, pollId.String(), 1, option1.Id.String())
+		redis.GetRedis().ZIncrBy(configs.GetConfig().Ctx, pollId.String(), 1, option1.Id.String())
+		redis.GetRedis().ZIncrBy(configs.GetConfig().Ctx, pollId.String(), 1, option2.Id.String())
+		redis.GetRedis().ZIncrBy(configs.GetConfig().Ctx, pollId.String(), 1, option2.Id.String())
+		redis.GetRedis().ZIncrBy(configs.GetConfig().Ctx, pollId.String(), 1, option2.Id.String())
+
+		token := di.GetContainer().Get("encrypter").(*cryptography.JWTEncrypter).Encrypt(map[string]interface{}{
+			"sub": userID.String(),
+		})
+
+		pollResponse := map[string]interface{}{
+			"id":    pollId.String(),
+			"title": "Poll example",
+			"total": 5,
+			"options": []map[string]interface{}{
+				{
+					"id":    option1.Id.String(),
+					"title": "Option 1",
+				},
+				{
+					"id":    option2.Id.String(),
+					"title": "Option 2",
+				},
+			},
+		}
+
+		suite.e.GET("/polls/"+pollId.String()).WithHeader("Authorization", "Bearer "+token).Expect().Status(http.StatusOK).JSON().Object().IsEqual(pollResponse)
+
+		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.Title.Equals("Poll example")).Exec(configs.GetConfig().Ctx)
+		assert.NotEmpty(suite.T(), poll.ID)
+		assert.Equal(suite.T(), "Poll example", poll.Title)
+	})
+}

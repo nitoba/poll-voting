@@ -17,7 +17,10 @@ type TestGetPollByIdUseCaseConfig struct {
 
 func makeGetPollsByIdUseCase() TestGetPollByIdUseCaseConfig {
 	repo := &repositories_test.InMemoryPollsRepository{}
-	sut := usecases.NewGetPollByIdUseCase(repo)
+	countingVotesRepo := &repositories_test.InMemoryCountingVotesRepository{
+		Votes: make(map[string]map[string]int),
+	}
+	sut := usecases.NewGetPollByIdUseCase(repo, countingVotesRepo)
 	return TestGetPollByIdUseCaseConfig{
 		sut:  sut,
 		repo: repo,

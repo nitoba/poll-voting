@@ -103,6 +103,7 @@ func NewHttpModule() *HttpModule {
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return usecases.NewGetPollByIdUseCase(
 					ctn.Get("pollsRepository").(*infra_repositories.PollsRepositoryPrisma),
+					ctn.Get("countingVotingRepository").(*redis_repositories.CountingVotingRepositoryRedis),
 				), nil
 			},
 		},

@@ -1,4 +1,4 @@
-.PHONY: default run build tests clean prisma-migrate-dev prisma-generate prisma-deploy env env-test
+.PHONY: default run build tests clean prisma-migrate-dev prisma-generate prisma-deploy env env-test docker-run
 # Variables
 APP_NAME=poll-voting
 APP_ENTRY_POINT=./cmd/main.go
@@ -20,6 +20,8 @@ run:
 run-with-docs:
 	@go run github.com/swaggo/swag/cmd/swag@latest init -g $(APP_ENTRY_POINT) -o ./docs
 	@go run $(APP_ENTRY_POINT)
+docker-run:
+	@docker-compose up -d
 build:
 	@go build -o $(APP_NAME) $(APP_ENTRY_POINT)
 tests:

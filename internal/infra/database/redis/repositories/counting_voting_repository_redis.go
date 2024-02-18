@@ -38,6 +38,21 @@ func (c *CountingVotingRepositoryRedis) CountVotesByOptionId(pollId string, opti
 	return int(cmd.Val()), nil
 }
 
+func (c *CountingVotingRepositoryRedis) CountVotes(pollId string) (int, error) {
+	totalOfVotes := 0
+	conf := configs.GetConfig()
+	cmd := c.rdb.ZRangeWithScores(conf.Ctx, pollId, 0, -1)
+	if err := cmd.Err(); err != nil {
+		return 0, err
+	}
+
+	for _, v := range cmd.Val() {
+		totalOfVotes += int(v.Score)
+	}
+
+	return totalOfVotes, nil
+}
+
 func NewCountingVotingRepositoryRedis(rdb *redis.Conn) *CountingVotingRepositoryRedis {
 	return &CountingVotingRepositoryRedis{rdb: rdb}
 }

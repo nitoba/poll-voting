@@ -28,6 +28,20 @@ func (r *InMemoryCountingVotesRepository) CountVotesByOptionId(pollId string, op
 	return r.Votes[pollId][optionId], nil
 }
 
+func (r *InMemoryCountingVotesRepository) CountVotes(pollId string) (int, error) {
+	if _, ok := r.Votes[pollId]; !ok {
+		return 0, nil
+	}
+
+	totalOfVotes := 0
+
+	for _, v := range r.Votes[pollId] {
+		totalOfVotes += v
+	}
+
+	return totalOfVotes, nil
+}
+
 func NewInMemoryCountingVotesRepository() *InMemoryCountingVotesRepository {
 	return &InMemoryCountingVotesRepository{
 		Votes: make(map[string]map[string]int),

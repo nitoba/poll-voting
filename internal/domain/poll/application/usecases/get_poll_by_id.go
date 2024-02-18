@@ -7,7 +7,8 @@ import (
 )
 
 type GetPollByIdUseCase struct {
-	repo repositories.PollsRepository
+	repo              repositories.PollsRepository
+	countingVotesRepo repositories.CountingVotesRepository
 }
 
 func (uc *GetPollByIdUseCase) Execute(id string) (*entities.Poll, error) {
@@ -15,11 +16,21 @@ func (uc *GetPollByIdUseCase) Execute(id string) (*entities.Poll, error) {
 	if err != nil || poll == nil {
 		return nil, errors.ErrPollNotFound
 	}
+
+	votes, err := uc.countingVotesRepo.CountVotes(poll.Id.String())
+
+	if err != nil {
+		return nil, err
+	}
+
+	poll.Votes = votes
+
 	return poll, nil
 }
 
-func NewGetPollByIdUseCase(repo repositories.PollsRepository) *GetPollByIdUseCase {
+func NewGetPollByIdUseCase(repo repositories.PollsRepository, countingVotesRepo repositories.CountingVotesRepository) *GetPollByIdUseCase {
 	return &GetPollByIdUseCase{
-		repo: repo,
+		repo:              repo,
+		countingVotesRepo: countingVotesRepo,
 	}
 }

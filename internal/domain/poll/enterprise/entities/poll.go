@@ -10,6 +10,7 @@ type Poll struct {
 	core.Entity
 	Title     string
 	Options   []*PollOption
+	Votes     int
 	OwnerId   core.UniqueEntityId
 	CreatedAt time.Time
 }
