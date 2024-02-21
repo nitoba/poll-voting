@@ -21,13 +21,13 @@ func GetServer() *gin.Engine {
 	}
 
 	r := gin.Default()
-	c := cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4321"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:4321", "http://localhost:3333"},
+		AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Length", "Content-Type", "Accept-Encoding", "Authorization", "Cache-Control"},
+		ExposeHeaders:    []string{"Origin"},
 		AllowCredentials: true,
-		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
-	})
-	r.Use(c)
+	}))
 
 	// Register routes
 	routes.AuthRoutes(r)
