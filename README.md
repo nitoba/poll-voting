@@ -65,6 +65,12 @@ Não há necessidade de ter o Golang instalado em sua máquina.
 - Rode o comando `make env-test` para criar o arquivo de variáveis de ambiente de tests.
 - Para rodar os testes, execute o comando `make tests` no terminal.
 
+## RoadMap
+
+- [ ] Retornar as polls somente do votante logado
+- [ ] Retornar o numero de votos de cada poll
+- [ ] Fazer paginação de resultados 
+
 ## 📄 Licença
 
 Esse projeto está sob a licença MIT. Acesse o link [LICENSE](https://mit-license.org/) para mais detalhes.
