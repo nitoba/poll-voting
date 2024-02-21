@@ -421,6 +421,9 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

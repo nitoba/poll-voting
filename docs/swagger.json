@@ -415,6 +415,9 @@
                 },
                 "title": {
                     "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

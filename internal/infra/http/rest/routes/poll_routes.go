@@ -20,7 +20,7 @@ func PollRoutes(app *gin.Engine) {
 	updateCountingVotesController := ctn.Get("updateCountingVotesController").(*controllers.UpdateCountingVotesController)
 
 	router := app.Group("/polls")
-	router.Use(middlewares.AuthRequired(jwtEncrypter, voterRepository))
+	router.Use(middlewares.AuthRequiredCookie(jwtEncrypter, voterRepository))
 	{
 		router.GET("/", fetchPollsController.Handle)
 		router.GET("/:id", getPollByIdController.Handle)

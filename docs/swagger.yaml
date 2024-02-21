@@ -76,6 +76,8 @@ definitions:
         type: array
       title:
         type: string
+      total:
+        type: integer
     type: object
   polls_presenter.option:
     properties:

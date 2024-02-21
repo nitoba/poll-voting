@@ -36,7 +36,9 @@ func (u *AuthenticateUseCase) Execute(req AuthenticateRequest) (*AuthenticateRes
 	}
 
 	token := u.encrypter.Encrypt(map[string]interface{}{
-		"sub": voter.Id.String(),
+		"sub":   voter.Id.String(),
+		"email": voter.Email.Value(),
+		"name":  voter.Name,
 	})
 
 	return &AuthenticateResponse{

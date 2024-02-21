@@ -63,6 +63,8 @@ func (ct *AuthenticateVoterController) Handle(c *gin.Context) {
 		return
 	}
 
+	c.SetCookie("auth", res.AccessToken, 3600, "/", "*", false, true)
+
 	c.JSON(http.StatusOK, AuthenticateVoterResponse{
 		AccessToken: res.AccessToken,
 	})

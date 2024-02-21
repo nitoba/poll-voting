@@ -1,32 +1,21 @@
 package middlewares
 
 import (
-	"net/http"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/nitoba/poll-voting/internal/domain/poll/application/cryptography"
 	"github.com/nitoba/poll-voting/internal/domain/poll/application/repositories"
 )
 
-func sendUnauthorizedResponse(c *gin.Context, msg string) {
-	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-		"message": msg,
-	})
-}
-
-func AuthRequired(encrypter cryptography.Encrypter, voterRepository repositories.VotersRepository) gin.HandlerFunc {
+func AuthRequiredCookie(encrypter cryptography.Encrypter, voterRepository repositories.VotersRepository) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authorization := c.GetHeader("Authorization")
+		access_token, err := c.Cookie("auth")
 
-		if authorization == "" || !strings.Contains(authorization, "Bearer") {
+		if err != nil {
 			sendUnauthorizedResponse(c, "Token Required")
 			return
 		}
 
-		token := strings.TrimPrefix(authorization, "Bearer ")
-
-		payload, err := encrypter.Verify(token)
+		payload, err := encrypter.Verify(access_token)
 
 		if err != nil {
 			sendUnauthorizedResponse(c, "Invalid token")
