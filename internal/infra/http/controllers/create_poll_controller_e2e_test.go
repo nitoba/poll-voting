@@ -90,7 +90,7 @@ func (suite *CreatePollControllerTestSuite) TestE2EHandle() {
 			"sub": userID.String(),
 		})
 
-		suite.e.POST("/polls/").WithHeader("Authorization", "Bearer "+token).WithJSON(map[string]interface{}{
+		suite.e.POST("/polls/").WithCookie("auth", token).WithJSON(map[string]interface{}{
 			"title":   "Poll example",
 			"options": []string{"Option 1", "Option 2"},
 		}).Expect().Status(http.StatusCreated)

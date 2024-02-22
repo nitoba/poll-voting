@@ -117,7 +117,7 @@ func (suite *VoteOnPollControllerTestSuite) TestE2EHandle() {
 
 		routeToVote := "/polls/" + pollId.String() + "/vote"
 
-		suite.e.POST(routeToVote).WithHeader("Authorization", "Bearer "+token).WithJSON(map[string]interface{}{
+		suite.e.POST(routeToVote).WithCookie("auth", token).WithJSON(map[string]interface{}{
 			"option_id": option1.Id.String(),
 		}).Expect().Status(http.StatusCreated)
 
@@ -163,11 +163,11 @@ func (suite *VoteOnPollControllerTestSuite) TestE2EHandleWithVoteChanged() {
 
 		routeToVote := "/polls/" + pollId.String() + "/vote"
 
-		suite.e.POST(routeToVote).WithHeader("Authorization", "Bearer "+token).WithJSON(map[string]interface{}{
+		suite.e.POST(routeToVote).WithCookie("auth", token).WithJSON(map[string]interface{}{
 			"option_id": option1.Id.String(),
 		}).Expect().Status(http.StatusCreated)
 
-		suite.e.POST(routeToVote).WithHeader("Authorization", "Bearer "+token).WithJSON(map[string]interface{}{
+		suite.e.POST(routeToVote).WithCookie("auth", token).WithJSON(map[string]interface{}{
 			"option_id": option2.Id.String(),
 		}).Expect().Status(http.StatusCreated)
 		vote, _ := prisma.GetDB().Votes.FindFirst(db.Votes.PollID.Equals(pollId.String())).Exec(configs.GetConfig().Ctx)

@@ -131,7 +131,7 @@ func (suite *GetPollByIdControllerTestSuite) TestE2EHandle() {
 			},
 		}
 
-		suite.e.GET("/polls/"+pollId.String()).WithHeader("Authorization", "Bearer "+token).Expect().Status(http.StatusOK).JSON().Object().IsEqual(pollResponse)
+		suite.e.GET("/polls/"+pollId.String()).WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Object().IsEqual(pollResponse)
 
 		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.Title.Equals("Poll example")).Exec(configs.GetConfig().Ctx)
 		assert.NotEmpty(suite.T(), poll.ID)
@@ -193,7 +193,7 @@ func (suite *GetPollByIdControllerTestSuite) TestE2EHandleWithTotalVotes() {
 			},
 		}
 
-		suite.e.GET("/polls/"+pollId.String()).WithHeader("Authorization", "Bearer "+token).Expect().Status(http.StatusOK).JSON().Object().IsEqual(pollResponse)
+		suite.e.GET("/polls/"+pollId.String()).WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Object().IsEqual(pollResponse)
 
 		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.Title.Equals("Poll example")).Exec(configs.GetConfig().Ctx)
 		assert.NotEmpty(suite.T(), poll.ID)
