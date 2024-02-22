@@ -13,8 +13,8 @@ type FetchPollsByOwnerController struct {
 }
 
 // GetJWT godoc
-// @Summary      Fetch Polls
-// @Description  Fetch polls in the API
+// @Summary      Fetch Polls from owner
+// @Description  Fetch polls from owner in the API
 // @Tags         polls
 // @Accept       json
 // @Produce      json
