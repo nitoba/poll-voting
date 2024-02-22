@@ -28,3 +28,14 @@ func (r *InMemoryPollsRepository) FindById(id string) (*entities.Poll, error) {
 func (r *InMemoryPollsRepository) FindMany() ([]*entities.Poll, error) {
 	return r.Polls, nil
 }
+
+func (r *InMemoryPollsRepository) FindManyByOwnerId(ownerId string) ([]*entities.Poll, error) {
+	var polls []*entities.Poll
+	for _, poll := range r.Polls {
+		if poll.OwnerId.String() == ownerId {
+			polls = append(polls, poll)
+		}
+	}
+
+	return polls, nil
+}

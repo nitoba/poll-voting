@@ -63,6 +63,17 @@ func (r *PollsRepositoryPrisma) FindMany() ([]*entities.Poll, error) {
 	return mappers.PollToDomainList(polls), nil
 }
 
+func (r *PollsRepositoryPrisma) FindManyByOwnerId(ownerId string) ([]*entities.Poll, error) {
+	ctx := configs.GetConfig().Ctx
+	polls, err := r.db.Poll.FindMany(db.Poll.OwnerID.Equals(ownerId)).With(db.Poll.Options.Fetch()).Exec(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return mappers.PollToDomainList(polls), nil
+}
+
 func NewPollsRepositoryPrisma(db *db.PrismaClient) *PollsRepositoryPrisma {
 	return &PollsRepositoryPrisma{
 		db: db,

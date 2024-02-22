@@ -8,7 +8,6 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	configs "github.com/nitoba/poll-voting/config"
 	"github.com/nitoba/poll-voting/internal/domain/core"
-	"github.com/nitoba/poll-voting/internal/domain/poll/enterprise/entities"
 	"github.com/nitoba/poll-voting/internal/infra/cryptography"
 	"github.com/nitoba/poll-voting/internal/infra/database/prisma"
 	http_module "github.com/nitoba/poll-voting/internal/infra/http"
@@ -21,14 +20,14 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type FetchPollsControllerTestSuite struct {
+type FetchPollsByOwnerControllerTestSuite struct {
 	suite.Suite
 	e          *httpexpect.Expect
 	httpModule *http_module.HttpModule
 }
 
 // Run this function before the all tests
-func (s *FetchPollsControllerTestSuite) SetupSuite() {
+func (s *FetchPollsByOwnerControllerTestSuite) SetupSuite() {
 	di.InitContainer()
 
 	httpModule := http_module.NewHttpModule()
@@ -57,61 +56,55 @@ func (s *FetchPollsControllerTestSuite) SetupSuite() {
 }
 
 // Run this function after the all tests
-func (suite *FetchPollsControllerTestSuite) TearDownSuite() {
+func (suite *FetchPollsByOwnerControllerTestSuite) TearDownSuite() {
 	test.AfterAll()
 }
 
 // Run this function before every test
-func (suite *FetchPollsControllerTestSuite) SetupTest() {
+func (suite *FetchPollsByOwnerControllerTestSuite) SetupTest() {
 	test.TruncateTables()
 }
 
 // Run this function after every test
-// func (suite *FetchPollsControllerTestSuite) TearDownTest() {
+// func (suite *FetchPollsByOwnerControllerTestSuite) TearDownTest() {
 // 	test.TruncateTables()
 // }
 
-func TestFetchPollsControllerSuite(t *testing.T) {
+func TestFetchPollsByOwnerControllerSuite(t *testing.T) {
 	// Register the test suite
 	if os.Getenv("IGNORE_E2E") != "" {
 		t.Skip("Ignorando testes E2E")
 	}
-	suite.Run(t, new(FetchPollsControllerTestSuite))
+	suite.Run(t, new(FetchPollsByOwnerControllerTestSuite))
 }
 
-func (suite *FetchPollsControllerTestSuite) TestE2EHandle() {
-	suite.Run("should return a list of polls", func() {
+func (suite *FetchPollsByOwnerControllerTestSuite) TestE2EHandle() {
+	suite.Run("should return a list of polls from owner", func() {
 		userID := core.NewUniqueEntityId()
 
 		factories.MakePrismaVoter(factories.OptionalVoterParams{
 			Id: &userID,
 		})
+
 		factories.MakePrismaPoll(factories.OptionalPollParams{
-			Title:   "Poll example",
 			OwnerId: &userID,
-			Options: []*entities.PollOption{
-				factories.MakePoolOption(factories.OptionalPollOptionParams{
-					Title: "Option 1",
-				}),
-				factories.MakePoolOption(factories.OptionalPollOptionParams{
-					Title: "Option 2",
-				}),
-			},
 		})
+
+		factories.MakePrismaPoll()
 
 		token := di.GetContainer().Get("encrypter").(*cryptography.JWTEncrypter).Encrypt(map[string]interface{}{
 			"sub": userID.String(),
 		})
 
-		suite.e.GET("/polls/public").WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Array().NotEmpty()
+		suite.e.GET("/polls/").WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Array().Length().IsEqual(1)
 
-		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.Title.Equals("Poll example")).Exec(configs.GetConfig().Ctx)
+		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.OwnerID.Equals(userID.String())).Exec(configs.GetConfig().Ctx)
 		assert.NotEmpty(suite.T(), poll.ID)
-		assert.Equal(suite.T(), "Poll example", poll.Title)
+		assert.Equal(suite.T(), userID.String(), poll.OwnerID)
 	})
 }
 
-// func (suite *FetchPollsControllerTestSuite) TestE2EHandleInvalidData() {
+// func (suite *FetchPollsByOwnerControllerTestSuite) TestE2EHandleInvalidData() {
 // 	suite.Run("should return 400 if voter data is not valid", func() {
 // 		suite.e.POST("/auth/register").WithJSON(map[string]interface{}{
 // 			"email":    "john.doe@gmail.com",

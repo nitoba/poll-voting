@@ -99,6 +99,14 @@ func NewHttpModule() *HttpModule {
 			},
 		},
 		{
+			Name: "fetchPollsByOwnerUseCase",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return usecases.NewFetchPollsByOwnerUseCase(
+					ctn.Get("pollsRepository").(*infra_repositories.PollsRepositoryPrisma),
+				), nil
+			},
+		},
+		{
 			Name: "getPollByIdUseCase",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return usecases.NewGetPollByIdUseCase(
@@ -152,6 +160,12 @@ func NewHttpModule() *HttpModule {
 			Name: "fetchPollsController",
 			Provide: func(ctn module.Container) (interface{}, error) {
 				return controllers.NewFetchPollsController(ctn.Get("fetchPollsUseCase").(*usecases.FetchPollsUseCase)), nil
+			},
+		},
+		{
+			Name: "fetchPollsByOwnerController",
+			Provide: func(ctn module.Container) (interface{}, error) {
+				return controllers.NewFetchPollsByOwnerController(ctn.Get("fetchPollsByOwnerUseCase").(*usecases.FetchPollsByOwnerUseCase)), nil
 			},
 		},
 		{

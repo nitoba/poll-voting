@@ -22,6 +22,7 @@ type OptionalPollParams struct {
 func MakePool(props ...OptionalPollParams) *entities.Poll {
 	fake := faker.New()
 	id := core.NewUniqueEntityId()
+	ownerId := core.NewUniqueEntityId()
 	title := fake.Lorem().Text(100)
 	pollOptions := []*entities.PollOption{
 		MakePoolOption(),
@@ -33,6 +34,10 @@ func MakePool(props ...OptionalPollParams) *entities.Poll {
 
 	if len(props) > 0 && props[0].Id != nil {
 		id = core.NewUniqueEntityId(props[0].Id.String())
+	}
+
+	if len(props) > 0 && props[0].OwnerId != nil {
+		ownerId = core.NewUniqueEntityId(props[0].OwnerId.String())
 	}
 
 	if len(props) > 0 && props[0].Title != "" {
@@ -51,6 +56,7 @@ func MakePool(props ...OptionalPollParams) *entities.Poll {
 		Entity: core.Entity{
 			Id: id,
 		},
+		OwnerId:   ownerId,
 		Title:     title,
 		Options:   pollOptions,
 		CreatedAt: createdAt,
