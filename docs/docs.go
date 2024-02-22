@@ -120,7 +120,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Fetch polls in the API",
+                "description": "Fetch polls from owner in the API",
                 "consumes": [
                     "application/json"
                 ],
@@ -130,7 +130,7 @@ const docTemplate = `{
                 "tags": [
                     "polls"
                 ],
-                "summary": "Fetch Polls",
+                "summary": "Fetch Polls from owner",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -186,6 +186,49 @@ const docTemplate = `{
                 "responses": {
                     "201": {
                         "description": "Created"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/polls/public": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Fetch polls in the API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "polls"
+                ],
+                "summary": "Fetch Polls",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/polls_presenter.FetchPollsResponse"
+                            }
+                        }
                     },
                     "400": {
                         "description": "Bad Request",

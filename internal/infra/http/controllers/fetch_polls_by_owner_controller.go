@@ -18,7 +18,7 @@ type FetchPollsByOwnerController struct {
 // @Tags         polls
 // @Accept       json
 // @Produce      json
-// @Success      200  {array} polls_presenter.FetchPollsByOwnerResponse
+// @Success      200  {array} polls_presenter.FetchPollsResponse
 // @Failure      400  {object} Error
 // @Failure      500  {object} Error
 // @Router       /polls [get]
