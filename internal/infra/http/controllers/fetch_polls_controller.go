@@ -21,7 +21,7 @@ type FetchPollsController struct {
 // @Success      200  {array} polls_presenter.FetchPollsResponse
 // @Failure      400  {object} Error
 // @Failure      500  {object} Error
-// @Router       /polls/public [get]
+// @Router       /polls/all [get]
 // @Security ApiKeyAuth
 func (ct *FetchPollsController) Handle(c *gin.Context) {
 	userId := c.GetString("user_id")

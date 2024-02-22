@@ -196,7 +196,7 @@
                 }
             }
         },
-        "/polls/public": {
+        "/polls/all": {
             "get": {
                 "security": [
                     {

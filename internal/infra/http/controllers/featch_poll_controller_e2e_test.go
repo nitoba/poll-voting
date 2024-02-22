@@ -103,7 +103,7 @@ func (suite *FetchPollsControllerTestSuite) TestE2EHandle() {
 			"sub": userID.String(),
 		})
 
-		suite.e.GET("/polls/public").WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Array().NotEmpty()
+		suite.e.GET("/polls/all").WithCookie("auth", token).Expect().Status(http.StatusOK).JSON().Array().NotEmpty()
 
 		poll, _ := prisma.GetDB().Poll.FindFirst(db.Poll.Title.Equals("Poll example")).Exec(configs.GetConfig().Ctx)
 		assert.NotEmpty(suite.T(), poll.ID)

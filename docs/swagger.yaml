@@ -280,7 +280,7 @@ paths:
       summary: Vote On Poll
       tags:
       - polls
-  /polls/public:
+  /polls/all:
     get:
       consumes:
       - application/json

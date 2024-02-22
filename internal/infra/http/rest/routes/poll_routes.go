@@ -22,7 +22,7 @@ func PollRoutes(app *gin.Engine) {
 
 	router := app.Group("/polls").Use(middlewares.AuthRequiredCookie(jwtEncrypter, voterRepository))
 	{
-		router.GET("/public", fetchPollsController.Handle)
+		router.GET("/all", fetchPollsController.Handle)
 		router.GET("/", fetchPollsByOwnerController.Handle)
 		router.GET("/:id", getPollByIdController.Handle)
 		router.POST("/", createPollController.Handle)

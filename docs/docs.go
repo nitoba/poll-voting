@@ -202,7 +202,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/polls/public": {
+        "/polls/all": {
             "get": {
                 "security": [
                     {
